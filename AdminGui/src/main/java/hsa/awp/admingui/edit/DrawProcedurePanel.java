@@ -24,20 +24,25 @@ package hsa.awp.admingui.edit;
 import hsa.awp.admingui.controller.IAdminGuiController;
 import hsa.awp.campaign.model.DrawProcedure;
 import hsa.awp.campaign.model.PriorityList;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Class which allows to edit a DrawProcedures.
@@ -55,6 +60,11 @@ public class DrawProcedurePanel extends Panel {
    */
   @SpringBean(name = "admingui.controller")
   private transient IAdminGuiController controller;
+  
+  private static final List<String> TYPES = Arrays.asList(new String[]{"Keinerlei Beschränkung bei Erstellung der Wunschlisten",
+  		"Nur Veranstaltungen aus einem Fach pro Wunschliste möglich"});
+  
+  private String selected = TYPES.get(0);
 
   /**
    * drawDate represents a date picker for the {@link DrawProcedure}.
@@ -106,6 +116,11 @@ public class DrawProcedurePanel extends Panel {
    *
    * @param id the markup id for the Panel
    */
+  
+  private RadioChoice<String> ruleBasedTypes = new RadioChoice<String>("ruleBasedChoice", 
+		  new PropertyModel<String>(this, "selected"),
+		  TYPES);
+  
   public DrawProcedurePanel(String id) {
 
     this(id, null);
@@ -120,6 +135,7 @@ public class DrawProcedurePanel extends Panel {
     // TODO Sprache:
     add(panelLabel.setDefaultModel(new Model<String>(
         "Los-Prozedur erstellen")));
+    //add(ruleBasedTypes);
   }
 
   /**
@@ -166,6 +182,11 @@ public class DrawProcedurePanel extends Panel {
         .getMaximumPriorityListItems()));
     maximumPriorityLists.setModelObject(Integer.toString(drawProcedure
         .getMaximumPriorityLists()));
+    
+    if(drawProcedure.getRuleBased() == 0)
+    	selected = TYPES.get(0);
+    else if(drawProcedure.getRuleBased() == 1)
+    	selected = TYPES.get(1);
 
     form.add(drawName);
 
@@ -178,6 +199,8 @@ public class DrawProcedurePanel extends Panel {
     form.add(maximumPriorityListItems);
 
     form.add(maximumPriorityLists);
+    
+    form.add(ruleBasedTypes);
 
     form.add(new AjaxButton("submit") {
       private static final long serialVersionUID = -6537464906539587006L;
@@ -208,6 +231,12 @@ public class DrawProcedurePanel extends Panel {
           if (draw == null) {
             draw = drawProcedure;
           }
+          
+          if(selected == TYPES.get(0))
+        	  draw.setRuleBased(0);
+          else if(selected == TYPES.get(1))
+        	  draw.setRuleBased(1);
+          
           draw.setInterval(sD, eD);
           draw.setDrawDate(dD);
           draw.setMaximumPriorityListItems(Integer.valueOf(maximumPriorityListItems.getModelObject()));

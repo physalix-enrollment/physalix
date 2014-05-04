@@ -21,269 +21,328 @@
 
 package hsa.awp.gui.controller;
 
+import hsa.awp.campaign.facade.CampaignFacade;
 import hsa.awp.campaign.facade.ICampaignFacade;
 import hsa.awp.campaign.model.Campaign;
 import hsa.awp.campaign.model.ConfirmedRegistration;
 import hsa.awp.campaign.model.PriorityList;
+import hsa.awp.campaign.model.Procedure;
 import hsa.awp.common.exception.DataAccessException;
+import hsa.awp.event.facade.EventFacade;
 import hsa.awp.event.facade.IEventFacade;
 import hsa.awp.event.model.Category;
 import hsa.awp.event.model.Event;
 import hsa.awp.event.model.Subject;
 import hsa.awp.rule.facade.IRuleFacade;
 import hsa.awp.rule.facade.RuleFacade;
-import hsa.awp.rule.model.RegistrationRuleSet;
 import hsa.awp.user.facade.IUserFacade;
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.user.model.Student;
 import hsa.awp.user.model.User;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-
 public class GuiController implements IGuiController {
-  /**
-   * {@link EventFacade} for creating and modifying components of event.
-   */
-  protected IEventFacade evtFacade;
+	/**
+	 * {@link EventFacade} for creating and modifying components of event.
+	 */
+	protected IEventFacade evtFacade;
 
-  /**
-   * {@link CampaignFacade} for creating and modifying components of campaign.
-   */
-  protected ICampaignFacade camFacade;
+	/**
+	 * {@link CampaignFacade} for creating and modifying components of campaign.
+	 */
+	protected ICampaignFacade camFacade;
 
-  /**
-   * {@link RuleFacade} for accessing all facade methods.
-   */
-  protected IRuleFacade ruleFacade;
+	/**
+	 * {@link RuleFacade} for accessing all facade methods.
+	 */
+	protected IRuleFacade ruleFacade;
 
-  /**
-   * {@link IUserFacade} for accessing all facade methods.
-   */
-  protected IUserFacade userFacade;
+	/**
+	 * {@link IUserFacade} for accessing all facade methods.
+	 */
+	protected IUserFacade userFacade;
 
-  public GuiController() {
+	public GuiController() {
 
-    super();
-  }
+		super();
+	}
 
-  /*
-  * (non-Javadoc)
-  *
-  * @see hsa.awp.admingui.controller.IGuiController#getCategoryByName(java.lang.String)
-  */
-  @Override
-  public Category getCategoryByName(String name) {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * hsa.awp.admingui.controller.IGuiController#getCategoryByName(java.lang
+	 * .String)
+	 */
+	@Override
+	public Category getCategoryByName(String name) {
 
-    Category cat = null;
-    try {
-      cat = evtFacade.getCategoryByName(name);
-    } catch (DataAccessException e) {
-      return null;
-    }
-    return cat;
-  }
+		Category cat = null;
+		try {
+			cat = evtFacade.getCategoryByName(name);
+		} catch (DataAccessException e) {
+			return null;
+		}
+		return cat;
+	}
 
-  /*
-  * (non-Javadoc)
-  *
-  * @see hsa.awp.admingui.controller.IGuiController#getAllCategories()
-  */
-  @Override
-  public List<Category> getAllCategories() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hsa.awp.admingui.controller.IGuiController#getAllCategories()
+	 */
+	@Override
+	public List<Category> getAllCategories() {
 
-    List<Category> list = null;
-    try {
-      list = evtFacade.getAllCategories();
-    } catch (DataAccessException dae) {
-      return null;
-    }
-    return list;
-  }
+		List<Category> list = null;
+		try {
+			list = evtFacade.getAllCategories();
+		} catch (DataAccessException dae) {
+			return null;
+		}
+		return list;
+	}
 
-  /*
-  * (non-Javadoc)
-  *
-  * @see hsa.awp.admingui.controller.IGuiController#getAllSubjects()
-  */
-  @Override
-  public List<Subject> getAllSubjects() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hsa.awp.admingui.controller.IGuiController#getAllSubjects()
+	 */
+	@Override
+	public List<Subject> getAllSubjects() {
 
-    List<Subject> list = null;
-    try {
-      list = evtFacade.getAllSubjects();
-    } catch (DataAccessException dae) {
-      return null;
-    }
-    return list;
-  }
+		List<Subject> list = null;
+		try {
+			list = evtFacade.getAllSubjects();
+		} catch (DataAccessException dae) {
+			return null;
+		}
+		return list;
+	}
 
-  /*
-  * (non-Javadoc)
-  *
-  * @see hsa.awp.admingui.controller.IGuiController#getAllEvents()
-  */
-  @Override
-  public List<Event> getAllEvents() {
+	@Override
+	public List<Subject> findAllSubjectsByCategoryId(long id, Procedure proc) {
+		List<Subject> list = new ArrayList<Subject>();
+		try {
+			Set<Long> subjectIds = new HashSet<Long>();
+			for(Event event : getEventsByCampaign(proc.getCampaign())){
+				subjectIds.add(event.getSubject().getId());
+			}
+			for(Subject sub : evtFacade.findAllSubjectsByCategoryId(id)){
+				if(subjectIds.contains(sub.getId())){
+					list.add(sub);
+				}
+			}
+		} catch (DataAccessException dae) {
+			return null;
+		}
+		return list;
+	}
 
-    return evtFacade.getAllEvents();
-  }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hsa.awp.admingui.controller.IGuiController#getAllEvents()
+	 */
+	@Override
+	public List<Event> getAllEvents() {
 
-  /*
-  * (non-Javadoc)
-  *
-  * @see hsa.awp.admingui.controller.IGuiController#getAllCampaigns()
-  */
-  @Override
-  public List<Campaign> getAllCampaigns() {
+		return evtFacade.getAllEvents();
+	}
 
-    List<Campaign> cams = null;
-    try {
-      cams = camFacade.getAllCampaigns();
-    } catch (DataAccessException dae) {
-      return null;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see hsa.awp.admingui.controller.IGuiController#getAllCampaigns()
+	 */
+	@Override
+	public List<Campaign> getAllCampaigns() {
 
-    return cams;
-  }
+		List<Campaign> cams = null;
+		try {
+			cams = camFacade.getAllCampaigns();
+		} catch (DataAccessException dae) {
+			return null;
+		}
 
-  @Override
-  public Event getEventById(Long id) {
+		return cams;
+	}
 
-    try {
-      return evtFacade.getEventById(id);
-    } catch (DataAccessException dae) {
-      return null;
-    }
-  }
+	@Override
+	public Event getEventById(Long id) {
 
-  @Override
-  public List<ConfirmedRegistration> getConfirmedRegistrationsByIds(Set<Long> ids) {
+		try {
+			return evtFacade.getEventById(id);
+		} catch (DataAccessException dae) {
+			return null;
+		}
+	}
 
-    List<ConfirmedRegistration> confirmedRegs = new ArrayList<ConfirmedRegistration>();
+	@Override
+	public List<ConfirmedRegistration> getConfirmedRegistrationsByIds(
+			Set<Long> ids) {
 
-    for (Long id : ids) {
-      try {
-        confirmedRegs.add(camFacade.getConfirmedRegistrationById(id));
-      } catch (DataAccessException dae) {
-        // element not found
-      }
-    }
-    return confirmedRegs;
-  }
+		List<ConfirmedRegistration> confirmedRegs = new ArrayList<ConfirmedRegistration>();
 
-  @Transactional
-  public void deleteConfirmedRegistration(ConfirmedRegistration confirmedRegistration) {
+		for (Long id : ids) {
+			try {
+				confirmedRegs.add(camFacade.getConfirmedRegistrationById(id));
+			} catch (DataAccessException dae) {
+				// element not found
+			}
+		}
+		return confirmedRegs;
+	}
 
-    if (confirmedRegistration == null) {
-      throw new IllegalArgumentException("no confirmedRegistration given");
-    }
+	@Transactional
+	public void deleteConfirmedRegistration(
+			ConfirmedRegistration confirmedRegistration) {
 
-    camFacade.removeConfirmedRegistration(confirmedRegistration);
+		if (confirmedRegistration == null) {
+			throw new IllegalArgumentException("no confirmedRegistration given");
+		}
 
-    Event e = evtFacade.getEventById(confirmedRegistration.getEventId());
-    e.getConfirmedRegistrations().remove(confirmedRegistration.getId());
-    evtFacade.updateEvent(e);
-  }
+		camFacade.removeConfirmedRegistration(confirmedRegistration);
 
-  @Override
-  public long countConfirmedRegistrationsByEventId(long eventId) {
+		Event e = evtFacade.getEventById(confirmedRegistration.getEventId());
+		e.getConfirmedRegistrations().remove(confirmedRegistration.getId());
+		evtFacade.updateEvent(e);
+	}
 
-    return camFacade.countConfirmedRegistrationsByEventId(eventId);
-  }
+	@Override
+	public long countConfirmedRegistrationsByEventId(long eventId) {
 
-  @Override
-  public SingleUser getUserById(Long id) {
+		return camFacade.countConfirmedRegistrationsByEventId(eventId);
+	}
 
-    SingleUser singleUser = null;
-    try {
-      singleUser = userFacade.getSingleUserById(id);
-    } catch (DataAccessException dae) {
-      return null;
-    } catch (UnsupportedOperationException e) {
-      // UNSUPPORTEDOPERATION IN USER COMPONENT
-      Student stud = Student.getInstance("test", 1);
-      stud.setName("");
-      return stud;
-    }
-    return singleUser;
-  }
+	@Override
+	public SingleUser getUserById(Long id) {
 
-  @Override
-  public SingleUser getUserByName(String username) {
+		SingleUser singleUser = null;
+		try {
+			singleUser = userFacade.getSingleUserById(id);
+		} catch (DataAccessException dae) {
+			return null;
+		} catch (UnsupportedOperationException e) {
+			// UNSUPPORTEDOPERATION IN USER COMPONENT
+			Student stud = Student.getInstance("test", 1);
+			stud.setName("");
+			return stud;
+		}
+		return singleUser;
+	}
 
-    try {
-      return userFacade.getSingleUserByLogin(username);
-    } catch (DataAccessException e) {
-      return null;
-    }
-  }
+	@Override
+	public SingleUser getUserByName(String username) {
 
-  @Override
-  public List<Event> getEventsByCampaign(Campaign campaign) {
+		try {
+			return userFacade.getSingleUserByLogin(username);
+		} catch (DataAccessException e) {
+			return null;
+		}
+	}
 
-    List<Event> events = new LinkedList<Event>();
+	@Override
+	public List<Event> getEventsByCampaign(Campaign campaign) {
 
-    campaign = camFacade.getCampaignById(campaign.getId());
+		List<Event> events = new LinkedList<Event>();
 
-    for (Long id : campaign.getEventIds()) {
-      events.add(evtFacade.getEventById(id));
-    }
+		campaign = camFacade.getCampaignById(campaign.getId());
 
-    return events;
-  }
+		for (Long id : campaign.getEventIds()) {
+			events.add(evtFacade.getEventById(id));
+		}
 
-  @Override
-  public void removePriolist(PriorityList priorityList) {
+		return events;
+	}
+	
+	@Override
+	public long findCategoryIdByEventId(long id){
+		return evtFacade.findCategoryIdByEventId(id);
+	}
+	
+	@Override
+	public List<Event> findEventsBySubjectId(long subjectId, Procedure proc){
+		List<Event> list = new ArrayList<Event>();
+		try {
+			Set<Long> ids = proc.getCampaign().getEventIds();
+			for(Event e : evtFacade.findEventsBySubjectId(subjectId)){
+				if(ids.contains(e.getId())){
+					list.add(e);
+				}
+			}
+		} catch (DataAccessException dae) {
+			return null;
+		}
+		return list;
+	}
 
-    priorityList = camFacade.updatePriorityList(priorityList);
-    camFacade.removePriorityList(priorityList);
-  }
+	@Override
+	public void removePriolist(PriorityList priorityList) {
 
-  /**
-   * Setter for camFacade.
-   *
-   * @param camFacade the camFacade to set
-   */
-  public void setCampaignFacade(ICampaignFacade camFacade) {
+		priorityList = camFacade.updatePriorityList(priorityList);
+		camFacade.removePriorityList(priorityList);
+	}
 
-    this.camFacade = camFacade;
-  }
+	/**
+	 * Setter for camFacade.
+	 * 
+	 * @param camFacade
+	 *            the camFacade to set
+	 */
+	public void setCampaignFacade(ICampaignFacade camFacade) {
 
-  /**
-   * Setter for evtFacade.
-   *
-   * @param evtFacade the evtFacade to set
-   */
-  public void setEventFacade(IEventFacade evtFacade) {
+		this.camFacade = camFacade;
+	}
 
-    this.evtFacade = evtFacade;
-  }
+	/**
+	 * Setter for evtFacade.
+	 * 
+	 * @param evtFacade
+	 *            the evtFacade to set
+	 */
+	public void setEventFacade(IEventFacade evtFacade) {
 
-  /**
-   * @param ruleFacade the ruleFacade to set
-   */
-  public void setRuleFacade(IRuleFacade ruleFacade) {
+		this.evtFacade = evtFacade;
+	}
 
-    this.ruleFacade = ruleFacade;
-  }
+	/**
+	 * @param ruleFacade
+	 *            the ruleFacade to set
+	 */
+	public void setRuleFacade(IRuleFacade ruleFacade) {
 
-  /**
-   * @param userFacade the userFacade to set
-   */
-  public void setUserFacade(IUserFacade userFacade) {
+		this.ruleFacade = ruleFacade;
+	}
 
-    this.userFacade = userFacade;
-  }
+	/**
+	 * @param userFacade
+	 *            the userFacade to set
+	 */
+	public void setUserFacade(IUserFacade userFacade) {
 
-  @Override
-  public List<ConfirmedRegistration> findConfirmedRegistrationsByParticipantId(Long participantId) {
+		this.userFacade = userFacade;
+	}
 
-    return camFacade.findConfirmedRegistrationsByParticipantId(participantId);
-  }
+	@Override
+	public List<ConfirmedRegistration> findConfirmedRegistrationsByParticipantId(
+			Long participantId) {
 
-  @Override
-  public boolean hasParticipantConfirmedRegistrationInEvent(User participant, Event event) {
-    return camFacade.hasParticipantConfirmedRegistrationInEvent(participant.getId(), event.getId());
-  }
+		return camFacade
+				.findConfirmedRegistrationsByParticipantId(participantId);
+	}
+
+	@Override
+	public boolean hasParticipantConfirmedRegistrationInEvent(User participant,
+			Event event) {
+		return camFacade.hasParticipantConfirmedRegistrationInEvent(
+				participant.getId(), event.getId());
+	}
 }

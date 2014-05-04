@@ -173,6 +173,7 @@ public class TabGeneral extends Panel {
     form.add(termChoice);
 
     detailInfoField = new TextField<String>("event.tabGeneral.informationDetail", new Model<String>(event.getDetailInformation()));
+    detailInfoField.setRequired(true);
     form.add(detailInfoField);
 
     String subjectName = "";
@@ -253,7 +254,7 @@ public class TabGeneral extends Panel {
           event.setMaxParticipants(new Integer(maxParticipantsField.getModelObject()));
           event.setSubject(subject);
           event.setTerm(termChoice.getModelObject());
-          event.setDetailInformation(detailInfoField.getModelObject());
+          event.setDetailInformation(detailInfoField.getModelObject() == null ? "" : detailInfoField.getModelObject());
 
           event = controller.writeEvent(event);
 

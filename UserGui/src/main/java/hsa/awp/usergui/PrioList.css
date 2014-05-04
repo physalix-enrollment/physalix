@@ -40,7 +40,7 @@ h3.title {
 div#selector {
     float: left;
     min-height: 200px;
-    width: 185px;
+    width: 275px;
     border: 1px #000000 solid;
 }
 
@@ -70,8 +70,44 @@ div#selector ul li a:hover {
     color: #000000;
 }
 
+div#broadSelector {
+	float: left;
+	min-height: 200px;
+    width: 375px;
+    border: 1px #000000 solid;
+    margin-bottom: 20px;
+    margin-top: 2px;
+    margin-left: 20px;
+}
+
+div#broadSelector h3 {
+    background-color: #ff5e00;
+}
+
+div#broadSelector ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#broadSelector ul li {
+    border-bottom: 1px #d0d0d0 solid;
+}
+
+div#broadSelector ul li a {
+    text-decoration: none;
+    color: #000000;
+    padding: 4px 3px 4px 3px;
+    display: inline;
+}
+
+div#broadSelector ul li a:hover {
+    background-color: transparent;
+    color: #000000;
+}
+
 div.priolist {
-    width: 185px;
+    width: 275px;
     margin-right: 20px;
     margin-bottom: 10px;
     border: 1px #000000 solid;
@@ -99,12 +135,52 @@ div.priolist ul li a:hover {
     color: #ff5e00;
 }
 
+div.broadPrioList {
+	width: 375px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    border: 1px #000000 solid;
+}
+
+div.broadPrioList ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+div.broadPrioList ul li a {
+    text-decoration: none;
+    display: block;
+    color: #000000;
+    padding: 2px 3px 2px 3px;
+}
+
+div.broadPrioList ul li a:hover {
+    background-color: #d6d6d6;
+    color: #ff5e00;
+}
+
 div#lists {
     float: right;
     margin-bottom: 20px;
     border-left: 1px #ff5e00 dotted;
     padding-left: 20px;
-    width: 200px;
+    width: 275px;
+}
+
+div#newLists {
+    border-left: 1px #ff5e00 dotted;
+    float: right;
+}
+
+div#newLists h3 span {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div#newLists input {
+	float: right;
+	margin-bottom: 5px;
 }
 
 div.item {
@@ -114,7 +190,7 @@ div.item {
 
 div.draggable {
     padding: 6px 0px 2px 0px;
-    height: 40px;
+    height: 55px;
 }
 
 div.draggable:hover {
@@ -125,7 +201,7 @@ div.draggable:hover {
 div.dropTarget {
     padding: 0px;
     border-top: 1px grey dotted;
-    height: 48px;
+    height: 55px;
 }
 
 div.prioListManagement {
@@ -139,7 +215,7 @@ div.prioListManagement h3 {
 
 div#categories {
     float: left;
-    margin-right: 105px;
+    margin-right: 10px;
     min-height: 200px;
     width: 185px;
     border: 1px #000000 solid;
@@ -147,6 +223,26 @@ div#categories {
 
 div#categories h3 {
     background-color: #ff5e00;
+}
+
+div#categoriesDropDown {
+	width: 375px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+div#categoriesDropDown h3 {
+	background-color: #ff5e00;
+}
+
+div#categoriesDropDown select {
+	width: 250px;
+	background-color: #000000;
+	text-align: center;
+	margin-left: 60px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	color: #ffffff
 }
 
 div#categories ul {
@@ -168,6 +264,41 @@ div#categories ul li a span {
 }
 
 div#categories ul li a:hover span {
+    background-color: #FFAB7A;
+    color: #000000;
+}
+
+div#subjects {
+    float: left;
+    margin-right: 10px;
+    min-height: 200px;
+    width: 185px;
+    border: 1px #000000 solid;
+}
+
+div#subjects h3 {
+    background-color: #ff5e00;
+}
+
+div#subjects ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+div#subjects ul li a span {
+    color: #000000;
+    display: block;
+    float: left;
+    height: 20px;
+    padding: 3px 0 0;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: baseline;
+    width: 185px;
+}
+
+div#subjects ul li a:hover span {
     background-color: #FFAB7A;
     color: #000000;
 }

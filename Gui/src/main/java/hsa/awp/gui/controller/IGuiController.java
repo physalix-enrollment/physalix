@@ -25,6 +25,7 @@ import hsa.awp.campaign.facade.CampaignFacade;
 import hsa.awp.campaign.model.Campaign;
 import hsa.awp.campaign.model.ConfirmedRegistration;
 import hsa.awp.campaign.model.PriorityList;
+import hsa.awp.campaign.model.Procedure;
 import hsa.awp.common.exception.NoMatchingElementException;
 import hsa.awp.event.model.Category;
 import hsa.awp.event.model.Event;
@@ -66,7 +67,7 @@ public interface IGuiController {
    * @return all existing {@link Category}s
    */
   public abstract List<Category> getAllCategories();
-
+ 
   /**
    * Returns all {@link Event}s which exist.
    *
@@ -134,4 +135,10 @@ public interface IGuiController {
   List<ConfirmedRegistration> findConfirmedRegistrationsByParticipantId(Long participantId);
 
   boolean hasParticipantConfirmedRegistrationInEvent(User participant, Event event);
+
+long findCategoryIdByEventId(long id);
+
+List<Event> findEventsBySubjectId(long subjectId, Procedure proc);
+
+List<Subject> findAllSubjectsByCategoryId(long id, Procedure proc);
 }

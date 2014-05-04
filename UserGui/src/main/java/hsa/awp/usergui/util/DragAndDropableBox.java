@@ -22,19 +22,22 @@
 package hsa.awp.usergui.util;
 
 import hsa.awp.event.model.Event;
-import hsa.awp.usergui.PriorityListSelector;
+import hsa.awp.usergui.prioritylistselectors.AbstractPriorityListSelector;
+import hsa.awp.usergui.util.DragAndDrop.AbstractDropAndSortableBox;
+
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.scriptaculous.dragdrop.DraggableTarget;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Box which contains {@link DragableElement}.
@@ -53,6 +56,8 @@ public class DragAndDropableBox extends Panel {
    * List of DragableElement which are currently in this box.
    */
   private List<DragableElement> elements;
+  
+  private long componentId = -1;
 
 
   /**
@@ -115,7 +120,7 @@ public class DragAndDropableBox extends Panel {
       } else {
         elements = new LinkedList<DragableElement>();
         for (Event event : events) {
-          elements.add(new DragableElement(DRAG_AND_DROPABLE_BOX_ITEM, event));
+          elements.add(new DragableElement(DRAG_AND_DROPABLE_BOX_ITEM, event, true));
         }
       }
     } else {
@@ -134,25 +139,26 @@ public class DragAndDropableBox extends Panel {
         DragableElement element = null;
         try {
           element = (DragableElement) comp.findParent(DragableElement.class);
+          AbstractPriorityListSelector prioListSel = findParent(AbstractPriorityListSelector.class);
           if (!listContainsElement(elements, element) && elements.size() < DragAndDropableBox.this.maxEntries) {
-            elements.add(element);
-
-            DragAndDropableBox ddb = comp.findParent(DragAndDropableBox.class);
-
-            if (ddb != null) {
-              ddb.removeElementFromList(element, target);
-            }
-            DropAndSortableBox dsb = element.findParent(DropAndSortableBox.class);
+            DragAndDropableBox ddb = prioListSel.getSourceBox();
+            if(ddb.getComponentId() == prioListSel.getDropBoxElementId(element))
+            	elements.add(element);
+            
+//            if (ddb != null) {
+//              ddb.removeElementFromList(element, target);
+//            }
+            AbstractDropAndSortableBox dsb = element.findParent(AbstractDropAndSortableBox.class);
 
             if (dsb != null) {
-              dsb.removeItem(element, target);
+              boolean isLastElement = dsb.removeItem(element, target);
+              if(isLastElement){
+            	  DragAndDropableBox.this.add(new SimpleAttributeModifier("style", "background-color: #ffffff"));
+              }
             }
           }
-
-          PriorityListSelector prioListSel = findParent(PriorityListSelector.class);
           prioListSel.updateLists(target);
         } catch (ClassCastException e) {
-          // TODO Exceptionhandling
           e.printStackTrace();
         } catch (NullPointerException e) {
           e.printStackTrace();
@@ -216,7 +222,7 @@ public class DragAndDropableBox extends Panel {
       }
     }
 
-    PriorityListSelector prioListSel = findParent(PriorityListSelector.class);
+    AbstractPriorityListSelector prioListSel = findParent(AbstractPriorityListSelector.class);
     prioListSel.updateLists(target);
   }
 
@@ -259,4 +265,13 @@ public class DragAndDropableBox extends Panel {
       elements.clear();
     }
   }
+
+  public long getComponentId() {
+	return componentId;
+  }
+
+  public void setComponentId(long componentId) {
+	this.componentId = componentId;
+  }
+
 }

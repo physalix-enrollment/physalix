@@ -21,6 +21,8 @@
 
 package hsa.awp.event.dao;
 
+import java.util.List;
+
 import hsa.awp.common.dao.IAbstractMandatorableDao;
 import hsa.awp.event.model.Subject;
 
@@ -31,4 +33,5 @@ import hsa.awp.event.model.Subject;
  */
 public interface ISubjectDao extends IAbstractMandatorableDao<Subject, Long> {
   Subject findByNameAndMandatorId(String name, Long activeMandator);
+  List<Subject> findAllSubjectsByCategoryId(long id);
 }

@@ -116,7 +116,7 @@ public class ConfirmedRegistrationManagementPanel extends Panel {
         deleteLink.setVisible(controller.isCampaignOpen(item.getModelObject()));
 
         item.add(deleteLink);
-        deleteLink.add(new JavascriptEventConfirmation("onclick", "Sind Sie sicher?"));
+        deleteLink.add(new JavascriptEventConfirmation("onclick", "Sind Sie sicher?/Are you sure?"));
       }
     });
 

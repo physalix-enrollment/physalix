@@ -385,3 +385,13 @@ table thead tr td {
 table tbody tr:hover {
     background-color: #f9f9f9;
 }
+
+div#radioChoice {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: thin dotted red;
+}
+
+div#radioChoice span {
+	font-weight: bold;
+}

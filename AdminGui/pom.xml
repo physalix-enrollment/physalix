@@ -265,6 +265,6 @@
     </profiles>
     <properties>
         <wicket.version>1.4.7</wicket.version>
-        <jetty.version>6.1.4</jetty.version>
+        <jetty.version>6.1.6</jetty.version>
     </properties>
 </project>

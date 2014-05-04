@@ -27,8 +27,11 @@ import hsa.awp.campaign.model.DrawProcedure;
 import hsa.awp.campaign.model.PriorityList;
 import hsa.awp.campaign.model.PriorityListItem;
 import hsa.awp.campaign.rule.ICampaignRuleChecker;
+import hsa.awp.event.facade.IEventFacade;
 import hsa.awp.event.model.Event;
 import hsa.awp.user.model.SingleUser;
+
+import org.hibernate.LazyInitializationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,8 +48,14 @@ public class EventCheckService {
   private ICampaignFacade campaignFacade;
 
   private ICampaignRuleChecker ruleChecker;
+  
+  private IEventFacade eventFacade;
 
-  public EventCheckService() {
+  public void setEventFacade(IEventFacade eventFacade) {
+	this.eventFacade = eventFacade;
+}
+
+public EventCheckService() {
 
     logger = LoggerFactory.getLogger(this.getClass());
   }
@@ -103,7 +112,16 @@ public class EventCheckService {
     * check if event has enough empty slots
     */
     int maxParticipants = e.getMaxParticipants();
-    long participantCount = e.getConfirmedRegistrations().size();
+    long participantCount = -1;
+    //try to prevent LazyInitializationException when e.g. session has been closed in the meanwhile
+    try{
+    	participantCount = e.getConfirmedRegistrations().size();	
+    }catch(LazyInitializationException ex){
+    	e = eventFacade.getEventByEventId(e.getEventId());
+    }finally{
+    	participantCount = e.getConfirmedRegistrations().size();
+    }
+    		
 
     if ((maxParticipants - participantCount) <= 0) {
       return true;

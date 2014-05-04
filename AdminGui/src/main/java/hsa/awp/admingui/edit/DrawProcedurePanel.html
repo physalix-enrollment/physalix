@@ -54,10 +54,17 @@
         <div>
             <span class="key">max. Listen</span>
             <input wicket:id="maximumPriorityLists"/>
+            <span style="color: red">Hier legen Sie die Anzahl der Wunschlisten fest</span>
         </div>
         <div>
             <span class="key">max. Eintr&auml;ge</span>
             <input wicket:id="maximumPriorityListItems"/>
+            <span style="color: red">Hier legen Sie fest, wie viele Veranstaltungen pro Wunschliste eingetragen werden k&ouml;nnen</span>
+        </div>
+        <div id="radioChoice">
+        	<span>Angabe zur Fachreinheit der Listen:</span>
+        	<br/>
+        	<span wicket:id="ruleBasedChoice"></span>
         </div>
         <div>
             <input wicket:id="submit" type="submit" value=" Änderungen übernehmen "/>

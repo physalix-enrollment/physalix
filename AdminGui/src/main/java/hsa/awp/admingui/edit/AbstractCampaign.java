@@ -21,6 +21,8 @@
 
 package hsa.awp.admingui.edit;
 
+import static hsa.awp.event.util.EventFormattingUtils.formatDetailInformation;
+import static hsa.awp.event.util.EventFormattingUtils.formatEventId;
 import hsa.awp.admingui.controller.IAdminGuiController;
 import hsa.awp.admingui.util.AbstractSortedListSelectorPanel;
 import hsa.awp.campaign.model.Campaign;
@@ -29,12 +31,25 @@ import hsa.awp.event.model.Event;
 import hsa.awp.event.model.Term;
 import hsa.awp.event.util.EventSorter;
 import hsa.awp.user.model.StudyCourse;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
+import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -43,12 +58,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static hsa.awp.event.util.EventFormattingUtils.formatDetailInformation;
-import static hsa.awp.event.util.EventFormattingUtils.formatEventId;
 
 /**
  * AbstractCampaign class used for storing methods both for {@link AlterCampaignPanel} and {@link CreateCampaignPanel}.
@@ -209,7 +218,7 @@ public abstract class AbstractCampaign extends Panel {
 
     detailText = new TextArea("detailText", new Model<String>());
     detailText.setModelObject(getCampaign().getDetailText());
-
+    
     List<Term> termChoices = controller.getTermsByMandator(getSession());
 
     DropDownChoice<Term> termDropDown = new DropDownChoice<Term>("term", termModel, termChoices, new IChoiceRenderer<Term>() {

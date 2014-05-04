@@ -30,10 +30,12 @@ import hsa.awp.gui.controller.IGuiController;
 import hsa.awp.rule.model.RegistrationRuleSet;
 import hsa.awp.rule.model.Rule;
 import hsa.awp.user.model.*;
+
 import org.apache.wicket.Session;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -634,4 +636,9 @@ public interface IAdminGuiController extends IGuiController {
   StudyCourse getStudyCourseById(Long id);
 
   void testTemplate(String email, String template);
+
+  Campaign createCampaign(String name, String email, Calendar endShow,
+		Calendar startShow, LinkedList<Long> linkedList,
+		List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
+		String detailText);
 }

@@ -40,6 +40,7 @@
     <bean name="scire.eventCheckService" class="hsa.awp.scire.services.EventCheckService">
         <property name="campaignFacade" ref="campaign.facade"></property>
         <property name="ruleChecker" ref="rule.facade"/>
+        <property name="eventFacade" ref="event.facade"></property>
     </bean>
 
 </beans>

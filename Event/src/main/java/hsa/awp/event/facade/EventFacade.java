@@ -24,6 +24,7 @@ package hsa.awp.event.facade;
 import hsa.awp.event.dao.*;
 import hsa.awp.event.model.*;
 import hsa.awp.user.model.SingleUser;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
@@ -98,6 +99,12 @@ public class EventFacade implements IEventFacade {
   public List<Subject> getAllSubjects() {
 
     return subjectDao.findAll();
+  }
+  
+  @Transactional(readOnly = true)
+  @Override
+  public List<Subject> findAllSubjectsByCategoryId(long id){
+	  return subjectDao.findAllSubjectsByCategoryId(id);
   }
 
   @Transactional(readOnly = true)
@@ -476,4 +483,16 @@ public class EventFacade implements IEventFacade {
 
     this.timetableDao = timetableDao;
   }
+
+@Override
+@Transactional(readOnly = true)
+public List<Event> findEventsBySubjectId(long subjectId) {
+	return eventDao.findEventsBySubjectId(subjectId);
+}
+
+@Override
+@Transactional(readOnly = true)
+public long findCategoryIdByEventId(long id) {
+	return eventDao.findCategoryIdByEventId(id);
+}
 }

@@ -25,14 +25,21 @@ import hsa.awp.campaign.model.Campaign;
 import hsa.awp.campaign.model.PriorityList;
 import hsa.awp.campaign.model.PriorityListItem;
 import hsa.awp.event.model.Event;
-import hsa.awp.usergui.PriorityListSelector;
 import hsa.awp.usergui.controller.IUserGuiController;
-import hsa.awp.usergui.util.DropAndSortableBox;
+import hsa.awp.usergui.prioritylistselectors.AbstractPriorityListSelector;
 import hsa.awp.usergui.util.JavascriptEventConfirmation;
+import hsa.awp.usergui.util.DragAndDrop.AbstractDropAndSortableBox;
+import hsa.awp.usergui.util.DragAndDrop.DropAndSortableBoxWRules;
+import hsa.awp.usergui.util.DragAndDrop.DropAndSortableBox;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.behavior.SimpleAttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.Loop;
@@ -43,9 +50,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author basti
@@ -66,7 +70,7 @@ public class DrawRegistrationManagementPanel extends Panel {
   /**
    * List of all priolistBoxes.
    */
-  private List<DropAndSortableBox> dropBoxList;
+  private List<AbstractDropAndSortableBox> dropBoxList;
 
   private MarkupContainer box;
 
@@ -74,84 +78,110 @@ public class DrawRegistrationManagementPanel extends Panel {
 
     super(id);
 
-    for (PriorityList priorityList : priolistModel.getObject()) {
-      if (campaign != null && !campaign.equals(priorityList.getProcedure().getCampaign())) {
-        throw new IllegalArgumentException("priolists belong to different campaigns");
-      }
-      campaign = priorityList.getProcedure().getCampaign();
-    }
+    initAll(priolistModel, "");
 
-    dropBoxList = new LinkedList<DropAndSortableBox>();
+  }
+  
+  public DrawRegistrationManagementPanel(String id, IModel<List<PriorityList>> prioListModel, String cssClass){
+	  super(id);
+	  
+	  initAll(prioListModel, cssClass);
+  }
+  
+  private void initAll(final IModel<List<PriorityList>> priolistModel, final String cssClass){
+	    for (PriorityList priorityList : priolistModel.getObject()) {
+	        if (campaign != null && !campaign.equals(priorityList.getProcedure().getCampaign())) {
+	          throw new IllegalArgumentException("priolists belong to different campaigns");
+	        }
+	        campaign = priorityList.getProcedure().getCampaign();
+	      }
 
-    box = new WebMarkupContainer("DrawRegistrationManagemantPanel.box");
-    box.setOutputMarkupId(true);
+	      dropBoxList = new LinkedList<AbstractDropAndSortableBox>();
 
-    IModel<Integer> iterations = new LoadableDetachableModel<Integer>() {
-      private static final long serialVersionUID = 1L;
+	      box = new WebMarkupContainer("DrawRegistrationManagemantPanel.box");
+	      box.setOutputMarkupId(true);
 
-      @Override
-      protected Integer load() {
+	      IModel<Integer> iterations = new LoadableDetachableModel<Integer>() {
+	        private static final long serialVersionUID = 1L;
 
-        int iterations = priolistModel.getObject().size();
+	        @Override
+	        protected Integer load() {
 
-        DrawRegistrationManagementPanel.this.setVisible(iterations > 0);
+	          int iterations = priolistModel.getObject().size();
 
-        return iterations;
-      }
-    };
+	          DrawRegistrationManagementPanel.this.setVisible(iterations > 0);
 
-    /*
-    * render priolists dynamically dependent on the attribute in drawProcedure.
-    */
-    Loop prioListLoop = new Loop("DrawRegistrationManagemantPanel.listsList", iterations) {
-      private static final long serialVersionUID = 1L;
+	          return iterations;
+	        }
+	      };
 
-      @Override
-      protected void populateItem(final LoopItem item) {
+	      /*
+	      * render priolists dynamically dependent on the attribute in drawProcedure.
+	      */
+	      Loop prioListLoop = new Loop("DrawRegistrationManagemantPanel.listsList", iterations) {
+	        private static final long serialVersionUID = 1L;
+	        
+	        private AbstractDropAndSortableBox createList(String id, List<Event> events, int maxItems, boolean isActive){
+	      	  if(campaign.findCurrentProcedure().getRuleBased() == 0){
+	      		  return new DropAndSortableBox(id, events, maxItems, isActive);
+	      	  }
+	      	  return new DropAndSortableBoxWRules(id, events, maxItems, isActive);
+	        }
 
-        List<PriorityList> prioListList = priolistModel.getObject();
-        DropAndSortableBox list = new DropAndSortableBox("DrawRegistrationManagemantPanel.prioList",
-            getEventListFromPrioList(prioListList.get(item.getIteration())), prioListList
-            .get(item.getIteration()).getProcedure().getMaximumPriorityListItems(), false);
-        list.setOutputMarkupId(true);
+	        @Override
+	        protected void populateItem(final LoopItem item) {
+	          List<PriorityList> prioListList = priolistModel.getObject();
+	          AbstractDropAndSortableBox list = createList("DrawRegistrationManagemantPanel.prioList",
+	              getEventListFromPrioList(prioListList.get(item.getIteration())), prioListList
+	              .get(item.getIteration()).getProcedure().getMaximumPriorityListItems(), false);
+	          list.setOutputMarkupId(true);
 
-        list.add(new AttributeAppender("class", new Model<String>("deactive"), " "));
-        item
-            .add(new Label("DrawRegistrationManagemantPanel.listName", "Wunschliste Kurs "
-                + (item.getIteration() + 1)));
-        dropBoxList.add(list);
-        item.add(list);
+	          list.add(new AttributeAppender("class", new Model<String>("deactive"), " "));
+	          
+		      if(!cssClass.isEmpty() && cssClass != null && cssClass.split("=").length == 2){
+		    	  String [] keyVal = cssClass.split("=");
+		    	  list.add(new SimpleAttributeModifier(keyVal[0], keyVal[1]));
+		      }  
+		      else {
+		    	  list.add(new SimpleAttributeModifier("class", "priolist"));
+		      }
+	          
+//	          item
+//	              .add(new Label("DrawRegistrationManagemantPanel.listName", "Wunschliste Kurs "
+//	                  + (item.getIteration() + 1)));
+	          dropBoxList.add(list);
+	          item.add(list);
 
-        AjaxFallbackLink<String> deleteLink = new AjaxFallbackLink<String>("DrawRegistrationManagemantPanel.delete") {
-          /**
-           * unique serialization id.
-           */
-          private static final long serialVersionUID = -5932722911932385381L;
+	          AjaxFallbackLink<String> deleteLink = new AjaxFallbackLink<String>("DrawRegistrationManagemantPanel.delete") {
+	            /**
+	             * unique serialization id.
+	             */
+	            private static final long serialVersionUID = -5932722911932385381L;
 
-          @Override
-          public void onClick(AjaxRequestTarget target) {
+	            @Override
+	            public void onClick(AjaxRequestTarget target) {
 
-            priolistModel.detach();
-            List<PriorityList> prioListList = priolistModel.getObject();
-            controller.removePriolist(prioListList.get(item.getIteration()));
+	              priolistModel.detach();
+	              List<PriorityList> prioListList = priolistModel.getObject();
+	              controller.removePriolist(prioListList.get(item.getIteration()));
 
-            PriorityListSelector prioListSelector = findParent(PriorityListSelector.class);
-            if (prioListSelector != null) {
-              prioListSelector.update(target, prioListList.get(item.getIteration()));
-            }
+	              AbstractPriorityListSelector prioListSelector = findParent(AbstractPriorityListSelector.class);
+	              if (prioListSelector != null) {
+	              	prioListSelector.update(target, prioListList.get(item.getIteration()));
+	              }
 
-            prioListList.remove(item.getIteration());
-            target.addComponent(box);
-          }
-        };
-        item.add(deleteLink);
-        deleteLink.add(new JavascriptEventConfirmation("onclick", "Sind Sie sicher?"));
-      }
-    };
+	              prioListList.remove(item.getIteration());
+	              target.addComponent(box);
+	            }
+	          };
+	          item.add(deleteLink);
+	          deleteLink.add(new JavascriptEventConfirmation("onclick", "Sind Sie sicher?/Are you sure?"));
+	        }
+	      };
 
-    box.add(new Label("DrawRegistrationManagemantPanel.titel", "Gespeicherte Wunschlisten"));
-    box.add(prioListLoop);
-    add(box);
+	      box.add(new Label("DrawRegistrationManagemantPanel.titel", "Gespeicherte Wunschlisten/Saved preference lists"));
+	      box.add(prioListLoop);
+	      add(box);
   }
 
   private List<Event> getEventListFromPrioList(PriorityList list) {

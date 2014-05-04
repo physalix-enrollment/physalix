@@ -25,6 +25,8 @@ import hsa.awp.common.AbstractMandatorableDomainObject;
 import hsa.awp.user.model.SingleUser;
 
 import javax.persistence.*;
+
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,7 +37,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "`event`")
-public class Event extends AbstractMandatorableDomainObject<Long> {
+public class Event extends AbstractMandatorableDomainObject<Long> implements Serializable {
   /**
    * Version UID which is used for serialization.
    */
@@ -52,7 +54,7 @@ public class Event extends AbstractMandatorableDomainObject<Long> {
    */
   private int eventId;
 
-  private String detailInformation;
+  private String detailInformation = "";
 
   /**
    * List of related Exams.

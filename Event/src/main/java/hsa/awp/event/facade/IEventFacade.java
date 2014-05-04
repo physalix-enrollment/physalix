@@ -31,6 +31,10 @@ import java.util.List;
  *
  * @author klassm
  */
+/**
+ * @author michael
+ *
+ */
 public interface IEventFacade {
   List<Event> convertToEventList(List<Long> ids);
 
@@ -97,7 +101,13 @@ public interface IEventFacade {
    * @return found {@link Subject} or {@link DataAccessException}
    */
   Subject getSubjectById(Long id);
-
+  
+ /**
+  * Looks for all {@link Subject} with the appropriate category id
+ * @param id identifer
+ * @return found {@link List<Subject>} or {@link DataAccessException}
+ */
+  List<Subject> findAllSubjectsByCategoryId(long id); 
   /**
    * Looks for a {@link Timetable} by its id.
    *
@@ -279,4 +289,9 @@ public interface IEventFacade {
   Subject getSubjectByNameAndMandatorId(String name, Long activeMandator);
 
   Category getCategoryByNameAndMandator(String modelObject, Long activeMandator);
+
+  List<Event> findEventsBySubjectId(long subjectId);
+
+  long findCategoryIdByEventId(long id);
+
 }

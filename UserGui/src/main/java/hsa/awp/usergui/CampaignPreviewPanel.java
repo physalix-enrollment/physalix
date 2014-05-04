@@ -26,6 +26,9 @@ import hsa.awp.campaign.model.DrawProcedure;
 import hsa.awp.campaign.model.FifoProcedure;
 import hsa.awp.campaign.model.Procedure;
 import hsa.awp.usergui.controller.IUserGuiController;
+import hsa.awp.usergui.prioritylistselectors.NewPriorityListSelector;
+import hsa.awp.usergui.prioritylistselectors.PriorityListSelector;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
@@ -49,6 +52,10 @@ import java.util.List;
 public class CampaignPreviewPanel extends Panel {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 3158911913605383361L;
+/**
    * {@link hsa.awp.usergui.controller.IUserGuiController}.
    */
   @SpringBean(name = "usergui.controller")
@@ -125,10 +132,15 @@ public class CampaignPreviewPanel extends Panel {
 
         if (camp.findCurrentProcedure() instanceof FifoProcedure) {
           setResponsePage(new OnePanelPage(new FlatListPanel("p1", camp)));
-        } else if (camp.findCurrentProcedure() instanceof DrawProcedure
+        } 
+        else if (camp.findCurrentProcedure() instanceof DrawProcedure
             && !controller.isAlreadyDrawn((DrawProcedure) currentProcedure)) {
-          setResponsePage(new OnePanelPage(new PriorityListSelector("p1", (DrawProcedure) camp
-              .findCurrentProcedure())));
+        	if(camp.findCurrentProcedure().getRuleBased() == 0)
+        		setResponsePage(new OnePanelPage(new PriorityListSelector("p1", (DrawProcedure) camp
+        				.findCurrentProcedure())));
+        	else if(camp.findCurrentProcedure().getRuleBased() == 1)
+        		setResponsePage(new OnePanelPage(new NewPriorityListSelector("p1", camp
+        				.findCurrentProcedure().getId())));
         }
       }
     };
@@ -141,7 +153,12 @@ public class CampaignPreviewPanel extends Panel {
         + df.format(camp.getEndShow().getTime())));
 
     ListView<Procedure> procedureListView = new ListView<Procedure>("campaignListPanel.procedureList", createProcedureList(camp)) {
-      @Override
+      /**
+		 * 
+		 */
+		private static final long serialVersionUID = -6278807028608347383L;
+
+	@Override
       protected void populateItem(ListItem<Procedure> procedureListItem) {
         procedureListItem.add(new ProcedureDetailView("campaignListPanel.procedure", procedureListItem.getModelObject()));
       }

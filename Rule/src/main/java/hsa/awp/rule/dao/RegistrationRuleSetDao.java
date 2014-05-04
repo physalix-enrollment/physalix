@@ -65,7 +65,7 @@ public class RegistrationRuleSetDao extends AbstractMandatorableDao<Registration
     try {
       return (RegistrationRuleSet) query.getSingleResult();
     } catch (NoResultException e) {
-      log.warn("no result", e);
+      //log.warn("no result for event id" + event);
       return null;
     }
   }

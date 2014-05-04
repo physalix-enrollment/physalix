@@ -21,6 +21,8 @@
 
 package hsa.awp.event.dao;
 
+import java.util.List;
+
 import hsa.awp.common.dao.AbstractMandatorableDao;
 import hsa.awp.event.model.Subject;
 
@@ -28,27 +30,42 @@ import javax.persistence.Query;
 
 /**
  * Data Access Object for CRUD methods of Subject.
- *
+ * 
  * @author klassm
  */
-public class SubjectDao extends AbstractMandatorableDao<Subject, Long> implements ISubjectDao {
-  /**
-   * Constructor for creating a SubjectDao.
-   */
-  public SubjectDao() {
+public class SubjectDao extends AbstractMandatorableDao<Subject, Long>
+		implements ISubjectDao {
+	/**
+	 * Constructor for creating a SubjectDao.
+	 */
+	public SubjectDao() {
 
-    super(Subject.class);
-  }
+		super(Subject.class);
+	}
 
-  @Override
-  public Subject findByNameAndMandatorId(String name, Long activeMandator) {
-    Query query = getEntityManager().createQuery("select o from Subject o where o.name=:name and o.mandatorId = :mandator");
-    query.setParameter("name", name);
-    query.setParameter("mandator", activeMandator);
-    try {
-      return (Subject) query.getSingleResult();
-    } catch (Exception e) {
-      return null;
-    }
-  }
+	@Override
+	public Subject findByNameAndMandatorId(String name, Long activeMandator) {
+		Query query = getEntityManager()
+				.createQuery(
+						"select o from Subject o where o.name=:name and o.mandatorId = :mandator");
+		query.setParameter("name", name);
+		query.setParameter("mandator", activeMandator);
+		try {
+			return (Subject) query.getSingleResult();
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Subject> findAllSubjectsByCategoryId(long id) {
+		Query query = getEntityManager().createQuery(
+				"select sub from Subject sub where category.id = :id ");
+		query.setParameter("id", id);
+		try {
+			return (List<Subject>) query.getResultList();
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }

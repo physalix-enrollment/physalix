@@ -1,0 +1,125 @@
+<!--
+  ~ Copyright (c) 2010-2012 Matthias Klass, Johannes Leimer,
+  ~               Rico Lieback, Sebastian Gabriel, Lothar Gesslein,
+  ~               Alexander Rampp, Kai Weidner
+  ~
+  ~ This file is part of the Physalix Enrollment System
+  ~
+  ~ Foobar is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Foobar is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+        xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <wicket:head>
+        <link rel="Stylesheet" type="text/css" href="resources/hsa.awp.usergui.HomePage/PrioList.css"/>
+    </wicket:head>
+    <wicket:head>
+        <link rel="Stylesheet" type="text/css" href="resources/hsa.awp.usergui.HomePage/EventDetailPanel.css"/>
+    </wicket:head>
+
+    <title>Insert title here</title>
+</head>
+<body>
+
+<wicket:panel>
+    <a style="float: right;" class="tooltip" href="#legend"><img src="images/info.png" alt="info" border="0"/>
+            <span>Hilfe</span></a>
+    <div wicket:id="prioListSelector.box">
+        <span wicket:id="prio.feedback"></span>
+
+        <h3><span wicket:id="prioListSelector.heading">Anmeldung: AWP SS11 Phase: Losdurchgang 1</span></h3>
+
+        <form wicket:id="prioListSelector.form" class="prioListForm" autocomplete="off">
+            <div id="categories">
+                <h3>Kategorie w&auml;hlen/Select category</h3>
+                <ul>
+                    <li wicket:id="prioListSelector.categories"><a wicket:id="prioListSelector.categoriesLink"><span
+                            wicket:id="prioListSelector.categoryName"></span></a></li>
+                </ul>
+            </div>
+            <div id="selector">
+                <h3>Veranstaltungen/Courses</h3>
+
+                <div wicket:id="prioListSelector.selectableObjects"></div>
+            </div>
+            <div id="lists">
+                <span wicket:id="prioListSelector.messageEmpty"></span>
+
+                <h3 style="background-color: transparent;" wicket:id="prioListSelector.messageTitle"></h3>
+                <h3 style="background-color: transparent; color: #ff4500;" wicket:id="prioListSelector.messageSubtitle">Diese Listen sind noch nicht gespeichert!</h3>
+                <div wicket:id="prioListSelector.listsList" class="priolist">
+                    <!-- <h3 wicket:id="prioListSelector.listName">Wunschliste Kurs 1</h3>  -->
+                    <div class='prioListItems' wicket:id="prioListSelector.prioList"></div>
+                </div>
+                <input class="submit" wicket:id="prioListSelector.submit" type="submit" value=" Speichern "/>
+
+                <div class="prioListManagement" wicket:id="prioListSelector.managementPanel"></div>
+                <div style="clear: both"></div>
+
+            </div>
+
+        </form>
+
+
+    </div>
+    <div class="legend">
+        <a name="legend"></a>
+        <div style="float: left; width: 50%;">
+            <h3>Hilfe</h3>
+
+            <h4>Wie erstelle ich meine Wunschlisten?</h4>
+            <ul>
+                <li><p>Wenn Sie eine Veranstaltung besuchen wollen, dann erstellen Sie wie folgt eine Wunschliste:</p>
+                    <p>Ziehen Sie mit der Maus Ihre gew&uuml;nschten  Veranstaltungen nach Ihrer pers&ouml;nlichen Priorit&auml;t sortiert in die Wunschliste.</p></li>
+                <li><p>Wenn Sie mehr als eine Veranstaltung besuchen wollen, dann erstellen Sie eine zweite Wunschliste oder auch noch weitere. Allerdings ist die maximal m&ouml;gliche Anzahl von Wunschlisten für jede Einschreibung begrenzt. Sie k&ouml;nnen insgesamt h&ouml;chstens so viele Wunschlisten ausf&uuml;llen, wie  Sie in der Anzeige sehen.</p></li>
+            </ul>
+
+            <h4>Kann ich meine Wunschliste sp&auml;ter noch ver&auml;ndern?<br/>
+                Wann habe ich fest gebucht?</h4>
+            <ul>
+                <li><p>W&auml;hrend der Einschreibephase k&ouml;nnen Sie Ihre Wunschlisten jederzeit ver&auml;ndern.</p>
+                    <p>W&auml;hlen Sie dazu wieder die Option "Anmelden" und danach die entsprechende Anmeldem&ouml;glichkeit.</p></li>
+                <li><p>Am Ende der der Einschreibephase findet die Buchung durch eine Verlosung der verf&uuml;gbaren Pl&auml;tze statt.</p></li>
+                <li><p>Über das Ergebnis der Verlosung werden Sie per Mail informiert.</p></li>
+                <li><p>Die Buchungen k&ouml;nnen Sie dann &uuml;ber die Auswahl "Buchungen verwalten" einsehen und bearbeiten.</p></li>
+            </ul>
+        </div>
+        <div style="float: left; width: 50%;">
+            <h3>Help</h3>
+
+            <h4>How do I set up my course preference list?</h4>
+            <ul>
+                <li><p>To register for a specific course set up a preference list in the following manner:</p>
+                    <p>Drag and drop all desired courses into a preference list according to your desired priority.</p></li>
+                <li><p>If you would like to attend more than one language course, then set up an additional preference list, or as many as needed.  However, the total number of preference lists for each student enrolled is limited. It is only possible to set up the maximum number of preference lists as shown in the window.</p></li>
+            </ul>
+
+            <h4>Can I make changes to my preference list once it is set up?<br/>
+                When is my course enrollment binding?</h4>
+            <ul>
+                <li><p>During the registration period you are able to make changes to your preference lists at any point in time.</p>
+                    <p>Click the option "Register" and then click on the relevant registration request.</p></li>
+                <li><p>At the end of the registration period, final course enrollment will be determined by means of a lottery for all students.</p></li>
+                <li><p>The results of the course lottery will be sent to your e-mail address.</p></li>
+                <li><p>To view or make changes to enrollment in a specific course, click on the button "Course Enrollment Options".</p></li>
+            </ul>
+        </div>
+    </div>
+</wicket:panel>
+
+</body>
+</html>

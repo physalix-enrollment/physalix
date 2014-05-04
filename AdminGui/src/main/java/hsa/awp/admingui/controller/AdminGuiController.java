@@ -37,6 +37,7 @@ import hsa.awp.rule.model.RegistrationRuleSet;
 import hsa.awp.rule.model.Rule;
 import hsa.awp.user.facade.IUserFacade;
 import hsa.awp.user.model.*;
+
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -1113,7 +1114,8 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
     }
   }
 
-  private List<Mandator> getMandatorsFromUser(SingleUser user) {
+  @SuppressWarnings("unused")
+private List<Mandator> getMandatorsFromUser(SingleUser user) {
     List<Mandator> mandators = new ArrayList<Mandator>();
     for (RoleMapping roleMapping : user.getRolemappings()) {
       for (Mandator mandator : roleMapping.getMandators()) {
@@ -1239,5 +1241,38 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
   public void setMailFactory(IMailFactory mailFactory) {
     this.mailFactory = mailFactory;
   }
+
+@Override
+public Campaign createCampaign(String name, String email, Calendar endShow,
+		Calendar startShow, LinkedList<Long> linkedList,
+		List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
+		String detailText) {
+	Campaign campaign = null;
+    try {
+      campaign = Campaign.getInstance(getActiveMandator(session));
+      campaign.setEndShow(endShow);
+      campaign.setStartShow(startShow);
+      campaign.setEventIds(new HashSet<Long>(linkedList));
+      campaign.setName(name);
+      campaign.setCorrespondentEMail(email);
+      campaign.setStudyCourseIds(studyCourseIds);
+      campaign.setDetailText(detailText);
+
+      camFacade.saveCampaign(campaign);
+
+      for (Procedure p : procedures) {
+        campaign.addProcedure(p);
+        camFacade.updateProcedure(p);
+      }
+
+      camFacade.updateCampaign(campaign);
+    } catch (DataAccessException dae) {
+      dae.printStackTrace();
+      return null;
+    }
+
+    return campaign;
+	
+}
 }
 

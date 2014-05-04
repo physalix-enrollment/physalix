@@ -23,29 +23,30 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd"
-      xml:lang="en" lang="en">
+	xmlns:wicket="http://wicket.apache.org/dtds.data/wicket-xhtml1.4-strict.dtd"
+	xml:lang="en" lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Insert title here</title>
 </head>
 <body>
 
-<wicket:panel>
-    <div class="item" wicket:id="prioListDragableElement.element">
+	<wicket:panel>
+		<div class="item" wicket:id="prioListDragableElement.element">
 
-        <div wicket:id="prioListDragableElement.detailWindow"/>
+			<div wicket:id="prioListDragableElement.detailWindow" />
+			<div style="float: left; width: 85%; border-right: solid thin;">
+				<span wicket:id="prioListDragableElement.title"></span>
+				<br />
+				 <span style="font-size: 10px"
+					wicket:id="prioListDragableElement.info"></span>
+			</div>
+			<a wicket:id="prioListDragableElement.infoLink" class="tooltip" style="width: 10%">
+					<img src="images/info.png" alt="info" border="0" style="margin: auto"/> <span>Details</span>
+			</a>
 
-        <span wicket:id="prioListDragableElement.title"></span>
-        <a wicket:id="prioListDragableElement.infoLink" class="tooltip">
-            <img src="images/info.png" alt="info" border="0"/>
-            <span>Details</span>
-        </a>
-        <br>
-        <span wicket:id="prioListDragableElement.info"></span>
-
-    </div>
-</wicket:panel>
+		</div>
+	</wicket:panel>
 
 </body>
 </html>
