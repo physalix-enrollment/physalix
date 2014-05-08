@@ -19,9 +19,6 @@
  * along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- */
 package hsa.awp.usergui.prioritylistselectors;
 
 import hsa.awp.campaign.model.DrawProcedure;

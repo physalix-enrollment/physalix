@@ -23,7 +23,6 @@ package hsa.awp.usergui.registrationmanagement;
 
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.usergui.controller.IUserGuiController;
-
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -77,7 +76,6 @@ public class RegistrationManagementPanel extends Panel {
     box.add(regTitel);
 
     add(box);
-		
   }
 
   public void update(AjaxRequestTarget target) {

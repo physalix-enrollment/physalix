@@ -46,9 +46,7 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class NewPriorityListSelector extends AbstractPriorityListSelector {
-	/**
-	 * 
-	 */
+
 	private Label messageEmpty = new Label("prioListSelector.messageEmpty",
 			"Die maximale Anzahl der erlaubten Wunschlisten ist erreicht/<br>Limit of allowed preference list reached.");
 	private Label messageTitle = new Label("prioListSelector.messageTitle",
@@ -90,26 +88,26 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 				.getAuthentication().getName());
 		eventsContainer = new DragAndDropableBox(
 				"prioListSelector.selectableObjects");
-		eventsContainer.setOutputMarkupId(true);	
-		
+		eventsContainer.setOutputMarkupId(true);
+
 		subjectList = new DropDownChoice<Subject>("prioListSelector.subjects", new Model<Subject>(),
 				subjectModel, new ChoiceRenderer<Subject>(){
 
 					/**
-					 * 
+					 *
 					 */
 					private static final long serialVersionUID = 1L;
-					
+
 					public String getDisplayValue(Subject sub){
 						return sub.getName();
 					}
-			
+
 		});
-		
+
 		subjectList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
@@ -125,8 +123,8 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 				target.addComponent(eventsContainer);
 			}
 
-			
-			
+
+
 			private void checkListsForEventAndChangeColor() {
 				List<Event> events = eventsContainer.getEventList();
 				if (events.size() > 0) {
@@ -144,7 +142,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 			}
 
 		});
-		
+
 		updateContainer.add(subjectList);
 		drawProcedureModel = new LoadableDetachedModel<DrawProcedure>() {
 			/**
@@ -161,7 +159,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 
 		final IModel<List<Event>> eventlistModel = new LoadableDetachableModel<List<Event>>() {
 			/**
-				 * 
+				 *
 				 */
 			private static final long serialVersionUID = 1L;
 
@@ -179,7 +177,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 
 		categoryListModel = new LoadableDetachableModel<List<Category>>() {
 			/**
-				 * 
+				 *
 				 */
 			private static final long serialVersionUID = 1L;
 
@@ -204,21 +202,21 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 			}
 		};
 		categoryList = new DropDownChoice<Category>("prioListSelector.categories", new Model<Category>(), categoryListModel, new ChoiceRenderer<Category>() {
-		
+
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 1L;
 
 			public String getDisplayValue(Category cat){
 				return cat.getName();
 			}
-			
+
 		});
 		categoryList.add(new AjaxFormComponentUpdatingBehavior("onchange") {
-			
+
 			/**
-			 * 
+			 *
 			 */
 			private static final long serialVersionUID = 8894656604521410486L;
 
@@ -233,11 +231,11 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 				target.addComponent(eventsContainer);
 			}
 		});
-		
+
 		dropBoxList = new ArrayList<DropAndSortableBoxWRules>(drawProcedureModel
 				.getObject().getMaximumPriorityLists());
-		
-		
+
+
 		submitButton = new Button("prioListSelector.submit") {
 		      /**
 		       * generated UID.
@@ -274,8 +272,8 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		        }
 		      }
 		    };
-		
-		
+
+
 		IModel<Integer> prioListIterations = new LoadableDetachableModel<Integer>() {
 			/**
 		             *
@@ -290,9 +288,9 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 				int i = drawProcedure.getMaximumPriorityLists();
 				int j = controller.findPriorityListsByUserAndProcedure(
 						singleUser.getId(), drawProcedure).size();
-				
+
 				i = i - j;
-				
+
 				submitButton.setVisible(i > 0);
 		        messageEmpty.setVisible(!(i > 0));
 		        messageTitle.setVisible((i > 0));
@@ -310,7 +308,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 			private static final long serialVersionUID = 1L;
 			private List<String> colors = RandomColor.getRandomHexColors(getIterations());
 			private int index = 0;
-			
+
 			private void retryInit(){
 				colors = RandomColor.getRandomHexColors(getIterations());
 				index = 0;
@@ -339,7 +337,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		};
 
 		priolists.setOutputMarkupId(true);
-		
+
 		IModel<List<PriorityList>> prioListsModel = new LoadableDetachableModel<List<PriorityList>>() {
 		      /**
 		       * generated UID.
@@ -355,7 +353,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		        return list;
 		      }
 		};
-		
+
 		DrawRegistrationManagementPanel drawRegistrationManagementPanel = new DrawRegistrationManagementPanel(
 		        "prioListSelector.managementPanel", prioListsModel, "class=broadPrioList");
 
@@ -369,7 +367,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		form.add(eventsContainer);
 		form.add(submitButton);
 		//add(form);
-		
+
 		 DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		 add(new Label("prioListSelector.heading", drawProcedureModel.getObject().getCampaign().getName()
 		        + ": Phase: "
@@ -413,7 +411,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 
 	/**
 	 * Add element to sourceBox.
-	 * 
+	 *
 	 * @param element
 	 *            element to be added.
 	 */
@@ -424,7 +422,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 
 	/**
 	 * Updates the component after a priolist is deleted.
-	 * 
+	 *
 	 * @param target
 	 *            ajax target
 	 * @param list
@@ -447,7 +445,7 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 
 	/**
 	 * Ajax update for the whole component.
-	 * 
+	 *
 	 * @param target
 	 *            ajaxrequesttarget
 	 */
@@ -456,21 +454,14 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		target.addComponent(eventsContainer);
 	}
 
-	/**
-	 * generated UID.
-	 */
-	
 	public long getDropBoxElementId(DragableElement element){
 		return element.getEvent().getSubject().getId();
 	};
 
 	private class SubjectModel extends LoadableDetachableModel<List<Subject>> {
 
-		/**
-	 * 
-	 */
-		private static final long serialVersionUID = 1L;
-		private long id = -1;
+  private static final long serialVersionUID = 1L;
+  private long id = -1;
 
 		@Override
 		protected List<Subject> load() {
@@ -496,11 +487,11 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 	public DragAndDropableBox getSourceBox() {
 		return eventsContainer;
 	}
-	
+
 	public List<DropAndSortableBoxWRules> getLists(){
 		return dropBoxList;
 	}
-	
+
 	public List<Long> getSubjectIdsFromSavedLists(){
 		List<PriorityList> prioLists = controller.findPriorityListsByUserAndProcedure(singleUser.getId(), drawProcedureModel.getObject());
 		List<Long> ids = new ArrayList<Long>();
@@ -513,13 +504,12 @@ public class NewPriorityListSelector extends AbstractPriorityListSelector {
 		}
 		return ids;
 	}
-	
-	private void addEventsToContainer(long id) {
-			List<Event> eventList = controller
-					.findEventsBySubjectId(id, drawProcedureModel.getObject());
-			if (eventList != null) {
-				List<Event> filteredList = filterEventListForSourcebox(eventList);
-				eventsContainer.addAllEvents(filteredList);
-			}
-	}
+
+  private void addEventsToContainer(long id) {
+    List<Event> eventList = controller.findEventsBySubjectId(id, drawProcedureModel.getObject());
+    if (!eventList.isEmpty()) {
+      List<Event> filteredList = filterEventListForSourcebox(eventList);
+      eventsContainer.addAllEvents(filteredList);
+    }
+  }
 }

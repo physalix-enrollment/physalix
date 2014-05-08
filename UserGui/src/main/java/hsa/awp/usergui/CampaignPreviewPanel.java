@@ -51,13 +51,8 @@ import java.util.List;
 
 public class CampaignPreviewPanel extends Panel {
 
-  /**
-	 * 
-	 */
-	private static final long serialVersionUID = 3158911913605383361L;
-/**
-   * {@link hsa.awp.usergui.controller.IUserGuiController}.
-   */
+  private static final long serialVersionUID = 3158911913605383361L;
+
   @SpringBean(name = "usergui.controller")
   private IUserGuiController controller;
 
@@ -122,9 +117,7 @@ public class CampaignPreviewPanel extends Panel {
     final Procedure currentProcedure = camp.findCurrentProcedure();
 
     Link<String> link = new Link<String>("campaignListPanel.link") {
-      /**
-       * generated UID.
-       */
+
       private static final long serialVersionUID = 3425455511638833341L;
 
       @Override
@@ -132,15 +125,15 @@ public class CampaignPreviewPanel extends Panel {
 
         if (camp.findCurrentProcedure() instanceof FifoProcedure) {
           setResponsePage(new OnePanelPage(new FlatListPanel("p1", camp)));
-        } 
-        else if (camp.findCurrentProcedure() instanceof DrawProcedure
+        } else if (camp.findCurrentProcedure() instanceof DrawProcedure
             && !controller.isAlreadyDrawn((DrawProcedure) currentProcedure)) {
-        	if(camp.findCurrentProcedure().getRuleBased() == 0)
-        		setResponsePage(new OnePanelPage(new PriorityListSelector("p1", (DrawProcedure) camp
-        				.findCurrentProcedure())));
-        	else if(camp.findCurrentProcedure().getRuleBased() == 1)
-        		setResponsePage(new OnePanelPage(new NewPriorityListSelector("p1", camp
-        				.findCurrentProcedure().getId())));
+          if(camp.findCurrentProcedure().getRuleBased() == 0) {
+            setResponsePage(new OnePanelPage(new PriorityListSelector("p1", (DrawProcedure) camp
+              .findCurrentProcedure())));
+          } else if(camp.findCurrentProcedure().getRuleBased() == 1) {
+            setResponsePage(new OnePanelPage(new NewPriorityListSelector("p1", camp
+              .findCurrentProcedure().getId())));
+          }
         }
       }
     };
@@ -153,12 +146,9 @@ public class CampaignPreviewPanel extends Panel {
         + df.format(camp.getEndShow().getTime())));
 
     ListView<Procedure> procedureListView = new ListView<Procedure>("campaignListPanel.procedureList", createProcedureList(camp)) {
-      /**
-		 * 
-		 */
-		private static final long serialVersionUID = -6278807028608347383L;
+      private static final long serialVersionUID = -6278807028608347383L;
 
-	@Override
+      @Override
       protected void populateItem(ListItem<Procedure> procedureListItem) {
         procedureListItem.add(new ProcedureDetailView("campaignListPanel.procedure", procedureListItem.getModelObject()));
       }

@@ -33,221 +33,193 @@ import org.wicketstuff.scriptaculous.dragdrop.DraggableTarget;
 
 /**
  * Priolistitem which can recieve items.
- * 
+ *
  * @author basti
  */
 public class DraggablePrioListTarget extends Panel {
-	/**
-	 * generated UID.
-	 */
-	private static final long serialVersionUID = 1L;
+  /**
+   * generated UID.
+   */
+  private static final long serialVersionUID = 1L;
 
-	/**
-	 * reference to partent box.
-	 */
-	private AbstractDropAndSortableBox box;
+  /**
+   * reference to partent box.
+   */
+  private AbstractDropAndSortableBox box;
 
-	/**
-	 * draggableTarget which can recieve {@link DragableElement}.
-	 */
-	private DraggableTarget draggableTarget;
+  /**
+   * draggableTarget which can recieve {@link DragableElement}.
+   */
+  private DraggableTarget draggableTarget;
 
-	/**
-	 * element which is hold by this container.
-	 */
-	private DragableElement element;
+  /**
+   * element which is hold by this container.
+   */
+  private DragableElement element;
 
-	/**
-	 * index of this slot in the priolist.
-	 */
-	private int index;
+  /**
+   * index of this slot in the priolist.
+   */
+  private int index;
 
-	private boolean isActive;
+  private boolean isActive;
 
-	/**
-	 * Constructor which creates a new instance.
-	 * 
-	 * @param id
-	 *            wicket id
-	 * @param box
-	 *            reference to partent box.
-	 * @param index
-	 *            index of this slot in the priolist.
-	 */
-	public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box, int index) {
+  /**
+   * Constructor which creates a new instance.
+   *
+   * @param id    wicket id
+   * @param box   reference to partent box.
+   * @param index index of this slot in the priolist.
+   */
+  public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box, int index) {
 
-		this(id, box, index, null);
-	}
+    this(id, box, index, null);
+  }
 
-	/**
-	 * Constructor which creates a new instance.
-	 * 
-	 * @param id
-	 *            wicket id
-	 * @param box
-	 *            reference to partent box.
-	 * @param index
-	 *            index of this slot in the priolist.
-	 * @param element
-	 *            element to display.
-	 */
-	public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box,
-			int index, DragableElement element) {
+  /**
+   * Constructor which creates a new instance.
+   *
+   * @param id      wicket id
+   * @param box     reference to partent box.
+   * @param index   index of this slot in the priolist.
+   * @param element element to display.
+   */
+  public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box, int index, DragableElement element) {
 
-		this(id, box, index, element, true);
-	}
+    this(id, box, index, element, true);
+  }
 
-	/**
-	 * Constructor which creates a new instance.
-	 * 
-	 * @param id
-	 *            wicket id
-	 * @param box
-	 *            reference to partent box.
-	 * @param index
-	 *            index of this slot in the priolist.
-	 * @param element
-	 *            element to display.
-	 * @param isActive
-	 *            true if draggabiliy is given
-	 */
-	public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box,
-			int index, DragableElement element, boolean isActive) {
+  /**
+   * Constructor which creates a new instance.
+   *
+   * @param id       wicket id
+   * @param box      reference to partent box.
+   * @param index    index of this slot in the priolist.
+   * @param element  element to display.
+   * @param isActive true if draggabiliy is given
+   */
+  public DraggablePrioListTarget(String id, AbstractDropAndSortableBox box, int index, DragableElement element, boolean isActive) {
 
-		super(id);
-		this.box = box;
-		this.index = index;
-		this.element = element;
-		this.isActive = isActive;
+    super(id);
+    this.box = box;
+    this.index = index;
+    this.element = element;
+    this.isActive = isActive;
 
-		draggableTarget = new DropTarget("DraggablePrioListTarget.target");
-		if (element != null) {
-			draggableTarget.add(new DragableElement(
-					"DraggablePrioListTarget.element", element.getEvent(),
-					isActive));
-		} else {
+    draggableTarget = new DropTarget("DraggablePrioListTarget.target");
+    if (element != null) {
+      draggableTarget.add(new DragableElement("DraggablePrioListTarget.element", element.getEvent(), isActive));
+    } else {
+      draggableTarget.add(addDummyLabel(index));
+    }
 
-			draggableTarget.add(addDummyLabel(index));
-		}
+    draggableTarget.setOutputMarkupId(true);
 
-		draggableTarget.setOutputMarkupId(true);
+    add(draggableTarget);
+  }
 
-		add(draggableTarget);
-	}
+  /**
+   * Getter for element.
+   *
+   * @return the element
+   */
+  public DragableElement getElement() {
 
-	/**
-	 * Getter for element.
-	 * 
-	 * @return the element
-	 */
-	public DragableElement getElement() {
+    return element;
+  }
 
-		return element;
-	}
+  /**
+   * Setter for element.
+   *
+   * @param element the element to set
+   */
+  public void setElement(DragableElement element) {
 
-	/**
-	 * Setter for element.
-	 * 
-	 * @param element
-	 *            the element to set
-	 */
-	public void setElement(DragableElement element) {
+    this.element = element;
+  }
 
-		this.element = element;
-	}
+  /**
+   * updates this component with {@link AjaxRequestTarget}.
+   *
+   * @param target target which will be used for update.
+   */
+  public void update(AjaxRequestTarget target) {
 
-	/**
-	 * updates this component with {@link AjaxRequestTarget}.
-	 * 
-	 * @param target
-	 *            target which will be used for update.
-	 */
-	public void update(AjaxRequestTarget target) {
+    DraggableTarget contentBox = new DropTarget("DraggablePrioListTarget.target");
 
-		DraggableTarget contentBox = new DropTarget(
-				"DraggablePrioListTarget.target");
+    if (element != null) {
+      contentBox.add(new DragableElement("DraggablePrioListTarget.element", element.getEvent(), isActive));
+    } else {
+      contentBox.add(addDummyLabel(index));
+    }
 
-		if (element != null) {
-			contentBox.add(new DragableElement(
-					"DraggablePrioListTarget.element", element.getEvent(),
-					isActive));
-		} else {
-			contentBox.add(addDummyLabel(index));
-		}
+    draggableTarget.replaceWith(contentBox);
+    draggableTarget = (DraggableTarget) contentBox;
 
-		draggableTarget.replaceWith(contentBox);
-		draggableTarget = (DraggableTarget) contentBox;
+    target.addComponent(draggableTarget);
+  }
 
-		target.addComponent(draggableTarget);
-	}
+  /**
+   * Implementation of {@link DraggableTarget}.
+   *
+   * @author basti
+   */
+  private class DropTarget extends DraggableTarget {
+    /**
+     * generated UID.
+     */
+    private static final long serialVersionUID = 3224838902620487634L;
 
-	/**
-	 * Implementation of {@link DraggableTarget}.
-	 * 
-	 * @author basti
-	 */
-	private class DropTarget extends DraggableTarget {
-		/**
-		 * generated UID.
-		 */
-		private static final long serialVersionUID = 3224838902620487634L;
+    /**
+     * default wicket constructor.
+     *
+     * @param id wicket id
+     */
+    public DropTarget(String id) {
 
-		/**
-		 * default wicket constructor.
-		 * 
-		 * @param id
-		 *            wicket id
-		 */
-		public DropTarget(String id) {
+      super(id);
+    }
 
-			super(id);
-		}
+    @Override
+    protected void onDrop(Component component, AjaxRequestTarget target) {
 
-		@Override
-		protected void onDrop(Component component, AjaxRequestTarget target) {
+      DragableElement element = null;
+      try {
+        element = component.findParent(DragableElement.class);
 
-			DragableElement element = null;
-			try {
-				element = (DragableElement) component
-						.findParent(DragableElement.class);
+        DragAndDropableBox ddb = element.findParent(DragAndDropableBox.class);
 
-				DragAndDropableBox ddb = element
-						.findParent(DragAndDropableBox.class);
+        if (ddb != null) {
+          ddb.removeElementFromList(element, target);
+        }
 
-				if (ddb != null) {
-					ddb.removeElementFromList(element, target);
-				}
+        DraggablePrioListTarget.this.box.itemDropped(element, DraggablePrioListTarget.this, target);
 
-				DraggablePrioListTarget.this.box.itemDropped(element,
-						DraggablePrioListTarget.this, target);
+        AbstractDropAndSortableBox dsb = element.findParent(AbstractDropAndSortableBox.class);
 
-				AbstractDropAndSortableBox dsb = element
-						.findParent(AbstractDropAndSortableBox.class);
+        if (dsb != null && !dsb.listContainsElement(element)) {
+          dsb.removeItem(element, target);
+        }
 
-				if (dsb != null) {
-					if (!dsb.listContainsElement(element))
-						dsb.removeItem(element, target);
-				}
+        AbstractPriorityListSelector pls = findParent(AbstractPriorityListSelector.class);
+        if (pls != null) {
+          pls.updateLists(target);
+        }
+      } catch (ClassCastException e) {
+        // TODO exception handling
+        e.printStackTrace();
+      } catch (NullPointerException e) {
+        // TODO repair this
+        return;
+      }
+    }
+  }
 
-				AbstractPriorityListSelector pls = findParent(AbstractPriorityListSelector.class);
-				if (pls != null) {
-					pls.updateLists(target);
-				}
-			} catch (ClassCastException e) {
-				// TODO exception handling
-				e.printStackTrace();
-			} catch (NullPointerException e) {
-				// TODO repair this
-				return;
-			}
-		}
-	}
-	
-	private Label addDummyLabel(int index){
-		Label label = new Label("DraggablePrioListTarget.element", ""
-				+ (index + 1) + ". Priorität");
-		label.add(new SimpleAttributeModifier("style",
-				"font-size: 24px; font-style: bold; text-align: center; margin-top: auto; margin-buttom: auto"));
-		return label;
-	}
+  private Label addDummyLabel(int index){
+    Label label = new Label("DraggablePrioListTarget.element", ""
+        + (index + 1) + ". Priorität");
+    label.add(new SimpleAttributeModifier("style",
+        "font-size: 24px; font-style: bold; text-align: center; margin-top: auto; margin-buttom: auto"));
+    return label;
+  }
 }

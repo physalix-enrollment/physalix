@@ -54,5 +54,5 @@ public interface IEventDao extends IAbstractMandatorableDao<Event, Long> {
 
   List<Event> findEventsBySubjectId(long subjectId);
 
-long findCategoryIdByEventId(long id);
+  long findCategoryIdByEventId(long id);
 }

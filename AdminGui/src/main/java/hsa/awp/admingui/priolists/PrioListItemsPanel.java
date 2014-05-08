@@ -21,9 +21,6 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 public class PrioListItemsPanel extends Panel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -6320751336684964627L;
 	@SpringBean(name = "admingui.controller")
 	private transient IAdminGuiController controller;
@@ -39,9 +36,6 @@ public class PrioListItemsPanel extends Panel {
 		eventModel = new EventModel();
 		campaignsModel = new LoadableDetachableModel<List<Campaign>>() {
 			
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -51,9 +45,6 @@ public class PrioListItemsPanel extends Panel {
 		};
 		final ListView<Event> eventList = new ListView<Event>("events", eventModel) {
 
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -66,9 +57,6 @@ public class PrioListItemsPanel extends Panel {
 		final DropDownChoice<Campaign> campaignDropDown = new DropDownChoice<Campaign>("campaigns", new Model<Campaign>(), campaignsModel);
 		campaignDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
 			
-			/**
-			 * 
-			 */
 			private static final long serialVersionUID = 4598489035621218371L;
 
 			@Override
@@ -85,9 +73,6 @@ public class PrioListItemsPanel extends Panel {
 	
 	private class EventModel extends LoadableDetachableModel<List<Event>>{
 		
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
 		private Campaign campaign = null;
 

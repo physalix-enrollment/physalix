@@ -67,7 +67,7 @@ public interface IGuiController {
    * @return all existing {@link Category}s
    */
   public abstract List<Category> getAllCategories();
- 
+
   /**
    * Returns all {@link Event}s which exist.
    *
@@ -136,9 +136,9 @@ public interface IGuiController {
 
   boolean hasParticipantConfirmedRegistrationInEvent(User participant, Event event);
 
-long findCategoryIdByEventId(long id);
+  long findCategoryIdByEventId(long id);
 
-List<Event> findEventsBySubjectId(long subjectId, Procedure proc);
+  List<Event> findEventsBySubjectId(long subjectId, Procedure proc);
 
-List<Subject> findAllSubjectsByCategoryId(long id, Procedure proc);
+  List<Subject> findAllSubjectsByCategoryId(long id, Procedure proc);
 }

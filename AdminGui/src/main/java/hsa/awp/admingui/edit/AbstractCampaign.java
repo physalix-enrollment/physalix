@@ -218,7 +218,7 @@ public abstract class AbstractCampaign extends Panel {
 
     detailText = new TextArea("detailText", new Model<String>());
     detailText.setModelObject(getCampaign().getDetailText());
-    
+
     List<Term> termChoices = controller.getTermsByMandator(getSession());
 
     DropDownChoice<Term> termDropDown = new DropDownChoice<Term>("term", termModel, termChoices, new IChoiceRenderer<Term>() {

@@ -24,7 +24,6 @@ package hsa.awp.admingui;
 import hsa.awp.admingui.controller.IAdminGuiController;
 import hsa.awp.admingui.edit.*;
 import hsa.awp.admingui.edit.event.EventPanel;
-import hsa.awp.admingui.priolists.PrioListItemsPanel;
 import hsa.awp.admingui.report.view.ReportPrintingPanel;
 import hsa.awp.admingui.rule.RulePanel;
 import hsa.awp.admingui.usermanagement.MandatorDetailPanel;
@@ -33,7 +32,6 @@ import hsa.awp.admingui.usermanagement.UserManagement;
 import hsa.awp.admingui.util.AccessUtil;
 import hsa.awp.admingui.util.StudyCourseImportPanel;
 import hsa.awp.admingui.view.*;
-
 import org.apache.wicket.authorization.strategies.role.annotations.AuthorizeInstantiation;
 import org.apache.wicket.markup.html.CSSPackageResource;
 import org.apache.wicket.markup.html.WebPage;
@@ -98,34 +96,14 @@ public class BasePage extends WebPage {
     addStudyCourseImportLink();
     addMandatorLink();
     addSeperators();
-//    addPrioListsLink();
   }
-  
-//  private void addPrioListsLink(){
-//	  Link<PrioListItemsPanel> prioListLink = new Link<PrioListItemsPanel>("priolists") {
-//
-//		/**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = 1L;
-//
-//		@Override
-//		public void onClick() {
-//			setResponsePage(new OnePanelPage(new PrioListItemsPanel(OnePanelPage.getPanelIdOne())));
-//		}
-//	};
-//	add(prioListLink);
-//  }
 
   private void addUserRegistrationLink() {
     Link<RegistrationManagementPanel> registrationManagementPanelLink = new Link<RegistrationManagementPanel>("registrations") {
 
-      /**
-		 * 
-		 */
-		private static final long serialVersionUID = 3112868747232220835L;
+      private static final long serialVersionUID = 3112868747232220835L;
 
-	@Override
+      @Override
       public void onClick() {
 
         setResponsePage(new OnePanelPage(new RegistrationManagementPanel(OnePanelPage.getPanelIdOne())));

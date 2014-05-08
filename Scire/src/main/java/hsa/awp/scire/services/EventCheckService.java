@@ -83,7 +83,8 @@ public EventCheckService() {
 
   private boolean checkEvent(Event e, List<PriorityList> priorityListsByUserAndProcedure,
                              List<ConfirmedRegistration> confirmedRegistrations, SingleUser singleUser, DrawProcedure drawProcedure, List<Event> blackList) {
-
+    // prevent LazyInitializationExceptions
+    e = eventFacade.getEventByEventId(e.getEventId());
     if (blackList.contains(e)) {
       return true;
     }
@@ -112,16 +113,7 @@ public EventCheckService() {
     * check if event has enough empty slots
     */
     int maxParticipants = e.getMaxParticipants();
-    long participantCount = -1;
-    //try to prevent LazyInitializationException when e.g. session has been closed in the meanwhile
-    try{
-    	participantCount = e.getConfirmedRegistrations().size();	
-    }catch(LazyInitializationException ex){
-    	e = eventFacade.getEventByEventId(e.getEventId());
-    }finally{
-    	participantCount = e.getConfirmedRegistrations().size();
-    }
-    		
+    long participantCount = e.getConfirmedRegistrations().size();
 
     if ((maxParticipants - participantCount) <= 0) {
       return true;

@@ -59,7 +59,6 @@ public class DragAndDropableBox extends Panel {
   
   private long componentId = -1;
 
-
   /**
    * Maximum of elements which this box can hold.
    */
@@ -144,7 +143,7 @@ public class DragAndDropableBox extends Panel {
             DragAndDropableBox ddb = prioListSel.getSourceBox();
             if(ddb.getComponentId() == prioListSel.getDropBoxElementId(element))
             	elements.add(element);
-            
+
 //            if (ddb != null) {
 //              ddb.removeElementFromList(element, target);
 //            }

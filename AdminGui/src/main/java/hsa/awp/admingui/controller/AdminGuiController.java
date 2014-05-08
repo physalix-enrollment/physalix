@@ -1115,7 +1115,7 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
   }
 
   @SuppressWarnings("unused")
-private List<Mandator> getMandatorsFromUser(SingleUser user) {
+  private List<Mandator> getMandatorsFromUser(SingleUser user) {
     List<Mandator> mandators = new ArrayList<Mandator>();
     for (RoleMapping roleMapping : user.getRolemappings()) {
       for (Mandator mandator : roleMapping.getMandators()) {
@@ -1131,6 +1131,38 @@ private List<Mandator> getMandatorsFromUser(SingleUser user) {
     });
 
     return mandators;
+  }
+
+  @Override
+  public Campaign createCampaign(String name, String email, Calendar endShow,
+                                 Calendar startShow, LinkedList<Long> linkedList,
+                                 List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
+                                 String detailText) {
+    Campaign campaign = null;
+    try {
+      campaign = Campaign.getInstance(getActiveMandator(session));
+      campaign.setEndShow(endShow);
+      campaign.setStartShow(startShow);
+      campaign.setEventIds(new HashSet<Long>(linkedList));
+      campaign.setName(name);
+      campaign.setCorrespondentEMail(email);
+      campaign.setStudyCourseIds(studyCourseIds);
+      campaign.setDetailText(detailText);
+
+      camFacade.saveCampaign(campaign);
+
+      for (Procedure p : procedures) {
+        campaign.addProcedure(p);
+        camFacade.updateProcedure(p);
+      }
+
+      camFacade.updateCampaign(campaign);
+    } catch (DataAccessException dae) {
+      dae.printStackTrace();
+      return null;
+    }
+
+    return campaign;
   }
 
   /**
@@ -1241,38 +1273,5 @@ private List<Mandator> getMandatorsFromUser(SingleUser user) {
   public void setMailFactory(IMailFactory mailFactory) {
     this.mailFactory = mailFactory;
   }
-
-@Override
-public Campaign createCampaign(String name, String email, Calendar endShow,
-		Calendar startShow, LinkedList<Long> linkedList,
-		List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
-		String detailText) {
-	Campaign campaign = null;
-    try {
-      campaign = Campaign.getInstance(getActiveMandator(session));
-      campaign.setEndShow(endShow);
-      campaign.setStartShow(startShow);
-      campaign.setEventIds(new HashSet<Long>(linkedList));
-      campaign.setName(name);
-      campaign.setCorrespondentEMail(email);
-      campaign.setStudyCourseIds(studyCourseIds);
-      campaign.setDetailText(detailText);
-
-      camFacade.saveCampaign(campaign);
-
-      for (Procedure p : procedures) {
-        campaign.addProcedure(p);
-        camFacade.updateProcedure(p);
-      }
-
-      camFacade.updateCampaign(campaign);
-    } catch (DataAccessException dae) {
-      dae.printStackTrace();
-      return null;
-    }
-
-    return campaign;
-	
-}
 }
 

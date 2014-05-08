@@ -25,13 +25,17 @@ import hsa.awp.common.dao.AbstractMandatorableDao;
 import hsa.awp.common.exception.NoMatchingElementException;
 import hsa.awp.event.model.Event;
 import hsa.awp.event.model.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +44,9 @@ import java.util.List;
  * @author klassm
  */
 public class EventDao extends AbstractMandatorableDao<Event, Long> implements IEventDao {
+
+  private static final Logger log = LoggerFactory.getLogger(EventDao.class);
+
   /**
    * Constructor for creating an EventDao.
    */
@@ -109,7 +116,6 @@ public class EventDao extends AbstractMandatorableDao<Event, Long> implements IE
 
   @Override
   public List<Event> findEventsByTermId(Long id) {
-
     try {
       Query query = getEntityManager().createQuery("select o from Event o where o.term.id=:id");
       query.setParameter("id", id);
@@ -119,27 +125,28 @@ public class EventDao extends AbstractMandatorableDao<Event, Long> implements IE
     }
   }
 
-@SuppressWarnings("unchecked")
-@Override
-public List<Event> findEventsBySubjectId(long subjectId) {
-	try{
-		Query select = getEntityManager().createQuery("select e from Event e where subject.id=:id");
-		select.setParameter("id", subjectId);
-		return select.getResultList();
-	}catch(Exception e){
-		return null;
-	}
-}
+  @SuppressWarnings("unchecked")
+  @Override
+  public List<Event> findEventsBySubjectId(long subjectId) {
+    try {
+      Query select = getEntityManager().createQuery("select e from Event e where e.subject.id=:id");
+      select.setParameter("id", subjectId);
+      return select.getResultList();
+    } catch (Exception e) {
+      log.debug("no matching events found for subject [{}]", subjectId, e);
+      return new ArrayList<Event>();
+    }
+  }
 
-@Override
-public long findCategoryIdByEventId(long eventId) {
-	try {
-		Query select = getEntityManager().createQuery("select s.category.id from Subject s where s.id IN (select e.subject.id from Event e where e.id=:eventId)");
-		select.setParameter("eventId", eventId);
-		return Long.parseLong(select.getSingleResult().toString());
-	}
-	catch (Exception e){
-		return -1;
-	}
-}
+  @Override
+  public long findCategoryIdByEventId(long eventId) {
+    try {
+      TypedQuery<Long> select = getEntityManager().createQuery("select s.category.id from Subject s where s.id IN (select e.subject.id from Event e where e.id=:eventId)", Long.class);
+      select.setParameter("eventId", eventId);
+      return select.getSingleResult();
+    } catch (Exception e) {
+      log.debug("no matching category found for event [{}]", eventId, e);
+      return -1;
+    }
+  }
 }
