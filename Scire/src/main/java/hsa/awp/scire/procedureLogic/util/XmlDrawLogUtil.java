@@ -8,6 +8,8 @@ import hsa.awp.event.facade.IEventFacade;
 import hsa.awp.event.model.Event;
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.user.model.Student;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -16,6 +18,8 @@ import java.io.StringWriter;
 import java.util.Collection;
 
 public class XmlDrawLogUtil {
+
+  private static final Logger log = LoggerFactory.getLogger(XmlDrawLogUtil.class);
 
   private JAXBContext context;
 
@@ -50,49 +54,60 @@ public class XmlDrawLogUtil {
 
   public XmlDrawLog.LogEntry transformMailContentToLogEntry(MailContent content) {
     XmlDrawLog.LogEntry entry = new XmlDrawLog.LogEntry();
+    try {
+      DrawProcedure procedure = content.getDrawProcedure();
+      SingleUser user = content.getUser();
 
-    DrawProcedure procedure = content.getDrawProcedure();
-    SingleUser user = content.getUser();
+      entry.campaign = procedure.getCampaign().getName();
+      entry.procedure = procedure.getName();
+      entry.fullname = user.getName();
+      entry.username = user.getUsername();
+      entry.mail = user.getMail();
 
-    entry.campaign = procedure.getCampaign().getName();
-    entry.procedure = procedure.getName();
-    entry.fullname = user.getName();
-    entry.username = user.getUsername();
-    entry.mail = user.getMail();
+      if (user instanceof Student)
+        entry.matnr = ((Student) user).getMatriculationNumber();
+      else
+        entry.matnr = 0;
 
-    if (user instanceof Student)
-      entry.matnr = ((Student) user).getMatriculationNumber();
-    else
-      entry.matnr = 0;
+      int priorityListIndex = 1;
+      for (PriorityList priorityList : content.getPrioLists()) {
+        XmlDrawLog.PrioList prioList = new XmlDrawLog.PrioList();
+        prioList.nr = priorityListIndex++;
 
-    int priorityListIndex = 1;
-    for (PriorityList priorityList : content.getPrioLists()) {
-      XmlDrawLog.PrioList prioList = new XmlDrawLog.PrioList();
-      prioList.nr = priorityListIndex++;
+        for (PriorityListItem item : priorityList.getItems()) {
+          XmlDrawLog.PrioListEntry prioListEntry = new XmlDrawLog.PrioListEntry();
+          prioListEntry.id = item.getEvent();
+          prioListEntry.priority = item.getPriority();
 
-      for (PriorityListItem item : priorityList.getItems()) {
-        XmlDrawLog.PrioListEntry prioListEntry = new XmlDrawLog.PrioListEntry();
-
-        Event event = eventFacade.getEventById(item.getEvent());
-        prioListEntry.priority = item.getPriority();
-        prioListEntry.id = event.getId();
-        prioListEntry.eventId = event.getEventId();
-        prioListEntry.subject = event.getSubject().getName();
-        prioListEntry.text = event.getDetailInformation();
-        prioList.priorityListEntries.add(prioListEntry);
+          try {
+            Event event = eventFacade.getEventById(item.getEvent());
+            prioListEntry.eventId = event.getEventId();
+            prioListEntry.subject = event.getSubject().getName();
+            prioListEntry.text = event.getDetailInformation();
+          } catch (Exception e) {
+            log.warn("caught exception. skipping detail information for priolist item.", e);
+          }
+          prioList.priorityListEntries.add(prioListEntry);
+        }
+        entry.priorityLists.add(prioList);
       }
-      entry.priorityLists.add(prioList);
-    }
 
-    for (ConfirmedRegistration registration : content.getRegistrations()) {
-      XmlDrawLog.Ticket ticket = new XmlDrawLog.Ticket();
+      for (ConfirmedRegistration registration : content.getRegistrations()) {
+        XmlDrawLog.Ticket ticket = new XmlDrawLog.Ticket();
+        ticket.id = registration.getEventId();
 
-      Event event = eventFacade.getEventById(registration.getEventId());
-      ticket.id = event.getId();
-      ticket.eventId = event.getEventId();
-      ticket.subject = event.getSubject().getName();
-      ticket.text = event.getDetailInformation();
-      entry.tickets.add(ticket);
+        try {
+          Event event = eventFacade.getEventById(registration.getEventId());
+          ticket.eventId = event.getEventId();
+          ticket.subject = event.getSubject().getName();
+          ticket.text = event.getDetailInformation();
+        } catch (Exception e) {
+          log.warn("caught exception. skipping detail information for registration.", e);
+        }
+        entry.tickets.add(ticket);
+      }
+    } catch (Exception e) {
+      log.warn("caught exception. returning partial log entry", e);
     }
 
     return entry;

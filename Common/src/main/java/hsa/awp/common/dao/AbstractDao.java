@@ -34,6 +34,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import java.util.List;
 
+import static java.lang.String.format;
+
 /**
  * Abstract class for Accessing domain objects in the database.
  *
@@ -109,8 +111,9 @@ public abstract class AbstractDao<T extends IGenericDomainModel<K>, K> implement
     try {
       T element = getEntityManager().find(structure, id);
       if (element == null) {
-        logger.warn("no matching element");
-        throw new NoMatchingElementException();
+        String message = format("could not find [%s] with id [%s]", structure.getSimpleName(), id);
+        logger.warn(message);
+        throw new NoMatchingElementException(message);
       }
       return element;
     } catch (IllegalArgumentException e) {

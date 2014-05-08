@@ -61,8 +61,10 @@ public class DrawProcedurePanel extends Panel {
   @SpringBean(name = "admingui.controller")
   private transient IAdminGuiController controller;
   
-  private static final List<String> TYPES = Arrays.asList(new String[]{"Keinerlei Beschränkung bei Erstellung der Wunschlisten",
-  		"Nur Veranstaltungen aus einem Fach pro Wunschliste möglich"});
+  private static final List<String> TYPES = Arrays.asList(
+      "Keinerlei Beschränkung bei Erstellung der Wunschlisten",
+      "Nur Veranstaltungen aus einem Fach pro Wunschliste möglich"
+  );
   
   private String selected = TYPES.get(0);
 
@@ -135,7 +137,6 @@ public class DrawProcedurePanel extends Panel {
     // TODO Sprache:
     add(panelLabel.setDefaultModel(new Model<String>(
         "Los-Prozedur erstellen")));
-    //add(ruleBasedTypes);
   }
 
   /**
@@ -182,7 +183,7 @@ public class DrawProcedurePanel extends Panel {
         .getMaximumPriorityListItems()));
     maximumPriorityLists.setModelObject(Integer.toString(drawProcedure
         .getMaximumPriorityLists()));
-    
+
     if(drawProcedure.getRuleBased() == 0)
     	selected = TYPES.get(0);
     else if(drawProcedure.getRuleBased() == 1)
@@ -199,7 +200,7 @@ public class DrawProcedurePanel extends Panel {
     form.add(maximumPriorityListItems);
 
     form.add(maximumPriorityLists);
-    
+
     form.add(ruleBasedTypes);
 
     form.add(new AjaxButton("submit") {

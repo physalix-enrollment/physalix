@@ -249,34 +249,39 @@ public class DrawProcedureLogic extends AbstractProcedureLogic<DrawProcedure> im
           logger.trace("No item for this prio drawnList present. Skip this prio drawnList.");
           allLists.remove(drawnList);
         } else {
-          Event event = eventFacade.getEventById(item.getEvent());
-          logger.trace("Using item '{}' for event '{}' [{}]", new Object[]{item.getId(), event.getSubject().getName(),
-              event.getEventId()});
+          try {
+            Event event = eventFacade.getEventById(item.getEvent());
+            logger.trace("Using item '{}' for event '{}' [{}]", new Object[]{item.getId(), event.getSubject().getName(),
+                event.getEventId()});
 
-          logger.trace("Event has '{}/{}' confirmed registrations", event.getConfirmedRegistrations().size(), event.getMaxParticipants());
+            logger.trace("Event has '{}/{}' confirmed registrations", event.getConfirmedRegistrations().size(), event.getMaxParticipants());
 
-          if (!event.hasPlaceLeft()) {
-            logger.trace("No space left");
-          } else {
-            if (logger.isDebugEnabled()) {
-              User user = userFacade.getUserById(item.getPriorityList().getParticipant());
-              String name;
-              if (user instanceof SingleUser) {
-                name = ((SingleUser) user).getName();
-              } else {
-                name = ((Group) user).toString();
+            if (!event.hasPlaceLeft()) {
+              logger.trace("No space left in event [{}] with event id [{}]", event.getId(), event.getEventId());
+            } else {
+              if (logger.isDebugEnabled()) {
+                User user = userFacade.getUserById(item.getPriorityList().getParticipant());
+                String name;
+                if (user instanceof SingleUser) {
+                  name = ((SingleUser) user).getName();
+                } else {
+                  name = ((Group) user).toString();
+                }
+                logger.debug("Creating registration for '{}' in event '{}'", name, event.getSubject().getName());
               }
-              logger.debug("Creating registration for '{}' in event '{}'", name, event.getSubject().getName());
+
+              ConfirmedRegistration confirmedRegistration = ConfirmedRegistration.getInstance(item, procedure.getMandatorId());
+              campaignFacade.saveConfirmedRegistration(confirmedRegistration);
+
+              event.getConfirmedRegistrations().add(confirmedRegistration.getId());
+              eventFacade.updateEvent(event);
+
+              logger.trace("removing drawnList '{}' from draw pool", drawnList.getId());
+              allLists.remove(drawnList);
             }
-
-            ConfirmedRegistration confirmedRegistration = ConfirmedRegistration.getInstance(item, procedure.getMandatorId());
-            campaignFacade.saveConfirmedRegistration(confirmedRegistration);
-
-            event.getConfirmedRegistrations().add(confirmedRegistration.getId());
-            eventFacade.updateEvent(event);
-
-            logger.trace("removing drawnList '{}' from draw pool", drawnList.getId());
-            allLists.remove(drawnList);
+          } catch (Exception e) {
+            String message = String.format("unable to process priolist [%s] of participant [%s]", drawnList.getId(), drawnList.getParticipant());
+            logger.warn(message, e);
           }
         }
         logger.debug("'{}' lists left", roundPool.size());
@@ -329,7 +334,11 @@ public class DrawProcedureLogic extends AbstractProcedureLogic<DrawProcedure> im
         }
 
         for (MailContent mailContent : mailPerUser.values()) {
-          sendMail(mailContent);
+          try {
+            sendMail(mailContent);
+          } catch (Exception e) {
+            logger.warn("failed sending mail to [{}]", mailContent.getUser().getMail(), e);
+          }
         }
 
         logger.info("send registrationLog");
