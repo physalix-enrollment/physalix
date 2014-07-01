@@ -84,7 +84,7 @@ public EventCheckService() {
   private boolean checkEvent(Event e, List<PriorityList> priorityListsByUserAndProcedure,
                              List<ConfirmedRegistration> confirmedRegistrations, SingleUser singleUser, DrawProcedure drawProcedure, List<Event> blackList) {
     // prevent LazyInitializationExceptions
-    e = eventFacade.getEventByEventId(e.getEventId());
+    e = eventFacade.getEventById(e.getId());
     if (blackList.contains(e)) {
       return true;
     }
