@@ -351,7 +351,12 @@ public class ScireController implements IScireController {
       }
 
       try {
-        campaignFacade.getCampaignById(procedure.getCampaign().getId());
+        Campaign campaign = procedure.getCampaign();
+        if (campaign != null) {
+          campaignFacade.getCampaignById(campaign.getId());
+        } else {
+          procedureLogicsForDeletion.add(procedureLogic);
+        }
       } catch (DataAccessException ex) {
         procedureLogicsForDeletion.add(procedureLogic);
       }
