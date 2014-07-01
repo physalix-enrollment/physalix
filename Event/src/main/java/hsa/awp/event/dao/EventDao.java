@@ -23,17 +23,15 @@ package hsa.awp.event.dao;
 
 import hsa.awp.common.dao.AbstractMandatorableDao;
 import hsa.awp.common.exception.NoMatchingElementException;
+import hsa.awp.common.exception.NoUniqueResultException;
 import hsa.awp.event.model.Event;
-import hsa.awp.event.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +61,9 @@ public class EventDao extends AbstractMandatorableDao<Event, Long> implements IE
       query.setParameter("eventId", eventId);
       return (Event) query.getSingleResult();
     } catch (NoResultException e) {
-      throw new NoMatchingElementException("no matching element", e);
+      throw new NoMatchingElementException("no matching element with id "+eventId, e);
+    } catch (NonUniqueResultException e) {
+      throw new NoUniqueResultException("non unique result for event id " + eventId, e);
     }
   }
 
@@ -75,7 +75,9 @@ public class EventDao extends AbstractMandatorableDao<Event, Long> implements IE
       query.setParameter("mandatorId", mandatorId);
       return (Event) query.getSingleResult();
     } catch (NoResultException e) {
-      throw new NoMatchingElementException("no matching element", e);
+      throw new NoMatchingElementException("no matching element with id " + eventId, e);
+    } catch (NonUniqueResultException e) {
+      throw new NoUniqueResultException("non unique result for event id " + eventId, e);
     }
   }
 
