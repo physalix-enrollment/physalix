@@ -56,6 +56,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -214,6 +215,7 @@ public abstract class AbstractCampaign extends Panel {
     email.add(EmailAddressValidator.getInstance());
 
     name = new TextField<String>("name", new Model<String>());
+    name.add(StringValidator.maximumLength(40));
     name.setModelObject(getCampaign().getName());
 
     detailText = new TextArea("detailText", new Model<String>());
