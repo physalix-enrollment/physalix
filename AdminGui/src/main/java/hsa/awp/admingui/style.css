@@ -367,6 +367,11 @@ span.keywide {
     font-weight: bold;
 }
 
+span.hint {
+    font-size: small;
+    font-weight: lighter;
+}
+
 table {
     border-spacing: 0px;
     padding: 0px 3px 0px 3px;
