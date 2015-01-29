@@ -102,8 +102,19 @@ public class ConflictList extends ExportList implements CsvPrintable {
 
       content.add(expandInt(event.getEventId(), 4));
       Set<Integer> ids = new HashSet<Integer>();
-      for (SingleUser user : new HashSet<SingleUser>(eventUserListMap.get(event))) {
-        for (Event e : new HashSet<Event>(userEventListMap.get(user))) {
+
+      List<SingleUser> users = eventUserListMap.get(event);
+      if (users == null) {
+        users = new ArrayList<SingleUser>();
+
+        content.add(expandInt(event.getEventId(), 4)); // every event conflicts with itself
+      }
+      for (SingleUser user : users) {
+        List<Event> events = userEventListMap.get(user);
+        if (events == null) {
+          continue;
+        }
+        for (Event e : events) {
           ids.add(e.getEventId());
         }
       }
