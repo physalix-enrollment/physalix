@@ -105,6 +105,9 @@ public class Procedure extends AbstractMandatorableDomainObject<Long> {
 
     if (campaign != null) {
       for (Procedure p : campaign.getAppliedProcedures()) {
+        if (this.equals(p)) {
+          continue; // skip us, because it would be an overlap
+        }
         if (p.getStartDate().compareTo(this.getStartDate()) <= 0 && p.getEndDate().compareTo(this.getEndDate()) >= 0) {
           throw new IllegalArgumentException("Procedure with that start and endDate is already active : " + p.getName());
         }

@@ -23,11 +23,14 @@ package hsa.awp.admingui.edit;
 
 import hsa.awp.admingui.controller.IAdminGuiController;
 import hsa.awp.campaign.model.DrawProcedure;
+import hsa.awp.campaign.model.FifoDisplayMode;
 import hsa.awp.campaign.model.FifoProcedure;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.extensions.yui.calendar.DateTimeField;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -38,6 +41,9 @@ import org.apache.wicket.spring.injection.annot.SpringBean;
 
 import java.util.Calendar;
 import java.util.Date;
+
+import static hsa.awp.campaign.model.FifoDisplayMode.FULL;
+import static hsa.awp.campaign.model.FifoDisplayMode.SIGNAL;
 
 /**
  * Class which allows to edit a FifoProdecure.
@@ -65,6 +71,11 @@ public class FifoProcedurePanel extends Panel {
    * drawName represents the name of the {@link DrawProcedure}.
    */
   private TextField<String> fifoName = new TextField<String>("fifoName");
+
+  /**
+   * drawName represents the name of the {@link hsa.awp.campaign.model.DrawProcedure}.
+   */
+  private CheckBox displayMode = new CheckBox("showParticipantDetails", new Model<Boolean>());
 
   /**
    * startDate represents a date picker for the {@link DrawProcedure}.
@@ -127,6 +138,7 @@ public class FifoProcedurePanel extends Panel {
     endDate.setRequired(true);
 
     // get&add default values
+    displayMode.setModelObject(fifoProcedure.getDisplayMode() != SIGNAL);
     fifoName.setDefaultModel(cpm.bind("name"));
     startDate.setModelObject(fifoProcedure.getStartDate().getTime());
     endDate.setModelObject(fifoProcedure.getEndDate().getTime());
@@ -139,7 +151,9 @@ public class FifoProcedurePanel extends Panel {
 
     form.add(endDate);
 
-    form.add(new AjaxButton("submit") {
+    form.add(displayMode);
+
+    MarkupContainer add = form.add(new AjaxButton("submit") {
       private static final long serialVersionUID = -6537464906539587006L;
 
       @Override
@@ -151,15 +165,25 @@ public class FifoProcedurePanel extends Panel {
       @Override
       protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
+        FifoProcedure refreshedProcedure = fifoProcedure;
+        if (fifoProcedure.getId() != 0L) {
+          refreshedProcedure = controller.getFifoProcedureById(fifoProcedure.getId());
+        }
+        refreshedProcedure.setName(fifoProcedure.getName());
+
         Calendar sD = Calendar.getInstance();
         sD.setTime(startDate.getModelObject());
 
         Calendar eD = Calendar.getInstance();
         eD.setTime(endDate.getModelObject());
 
+        Boolean displayFullDetails = displayMode.getModelObject();
+        FifoDisplayMode fifoDisplayMode = displayFullDetails ? FULL : SIGNAL;
+
         try {
-          fifoProcedure.setInterval(sD, eD);
-          controller.writeFifoProcedure(fifoProcedure);
+          refreshedProcedure.setInterval(sD, eD);
+          refreshedProcedure.setDisplayMode(fifoDisplayMode);
+          controller.writeFifoProcedure(refreshedProcedure);
 //                    setResponsePage(new OnePanelPage(new ConfirmedEditPanel(OnePanelPage.getPanelIdOne())));
           //TODO Sprache:
           feedbackPanel.info("Eingaben \u00e4bernommen.");

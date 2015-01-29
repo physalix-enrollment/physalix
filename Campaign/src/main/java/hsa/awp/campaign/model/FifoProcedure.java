@@ -22,8 +22,11 @@
 package hsa.awp.campaign.model;
 
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.util.Calendar;
+
+import static javax.persistence.EnumType.STRING;
 
 /**
  * Persistent object for {@link FifoProcedure}. {@link ConfirmedRegistration}s will be created by using a FIFO algorithm.
@@ -37,6 +40,9 @@ public class FifoProcedure extends Procedure {
    * Version UID which is used for serialization.
    */
   private static final long serialVersionUID = -289359297968891789L;
+
+  @Enumerated(STRING)
+  private FifoDisplayMode displayMode;
 
   /**
    * Creates a new {@link FifoProcedure} and initializes it with appropriate values (e.g. inserts a HashSet at appropriate places,
@@ -92,5 +98,13 @@ public class FifoProcedure extends Procedure {
 //        final int prime = 31;
     int result = super.hashCode();
     return result;
+  }
+
+  public FifoDisplayMode getDisplayMode() {
+    return displayMode;
+  }
+
+  public void setDisplayMode(FifoDisplayMode displayMode) {
+    this.displayMode = displayMode;
   }
 }

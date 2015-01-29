@@ -22,6 +22,7 @@
 package hsa.awp.usergui;
 
 import hsa.awp.campaign.model.Campaign;
+import hsa.awp.campaign.model.FifoDisplayMode;
 import hsa.awp.campaign.model.FifoProcedure;
 import hsa.awp.campaign.model.Procedure;
 import hsa.awp.event.model.Category;
@@ -85,8 +86,6 @@ public class FlatListPanel extends Panel {
   @SpringBean(name = "usergui.controller")
   private transient IUserGuiController controller;
 
-  private Campaign campaign;
-
   private final SingleUser singleUser;
 
   /**
@@ -98,7 +97,7 @@ public class FlatListPanel extends Panel {
 
     super(id);
 
-    this.campaign = campaign;
+    final FifoProcedure procedure = getCurrentFifoProcedure(campaign);
 
     singleUser = controller.getUserById(SecurityContextHolder.getContext().getAuthentication().getName());
 
@@ -169,23 +168,12 @@ public class FlatListPanel extends Panel {
             item.add(new Label("eventNumber", formatEventId(event)));
             item.add(new Label("subjectname", event.getSubject().getName()));
             item.add(new Label("eventdescription", formatDetailInformation(event)));
-            item.add(new Label("eventplaces", "(" + participantCount + "/" + maxParticipants + ")"));
 
             Link<Object> link = new Link<Object>("submited") {
               public void onClick() {
-
-                Procedure procedure = campaign.findCurrentProcedure();
-
-                FifoProcedure fifo;
-
-                if (procedure instanceof FifoProcedure) {
-                  fifo = (FifoProcedure) procedure;
-                } else {
-                  throw new IllegalStateException("Flatlist works only with Fifoprocedure.");
-                }
-
-                  String initiator = SecurityContextHolder.getContext().getAuthentication().getName();
-                  controller.registerWithFifoProcedure(fifo, event, initiator, initiator, true);
+                FifoProcedure fifo = getCurrentFifoProcedure(campaign);
+                String initiator = SecurityContextHolder.getContext().getAuthentication().getName();
+                controller.registerWithFifoProcedure(fifo, event, initiator, initiator, true);
               }
             };
 
@@ -196,6 +184,11 @@ public class FlatListPanel extends Panel {
               link.setVisible(false);
               item.add(new AttributeAppender("class", new Model<String>("disabled"), " "));
             }
+
+            String eventPlacesText = procedure.getDisplayMode() == FifoDisplayMode.FULL
+                    ? "(" + participantCount + "/" + maxParticipants + ")"
+                    : "";
+            item.add(new Label("eventplaces", eventPlacesText));
 
             if ((maxParticipants - participantCount) <= 0) {
               link.setEnabled(false);
@@ -279,6 +272,15 @@ public class FlatListPanel extends Panel {
         return sb.toString();
       }
     }));
+  }
+
+  private FifoProcedure getCurrentFifoProcedure(Campaign campaign) {
+    Procedure procedure = campaign.findCurrentProcedure();
+    if (procedure instanceof FifoProcedure) {
+      return (FifoProcedure) procedure;
+    } else {
+      throw new IllegalStateException("Flatlist works only with Fifoprocedure.");
+    }
   }
 
   private List<Event> getEventsOfCategory(Category category, List<Event> events) {
