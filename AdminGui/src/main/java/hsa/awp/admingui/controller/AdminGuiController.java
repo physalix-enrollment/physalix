@@ -522,6 +522,11 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
   }
 
   @Override
+  public void deleteRuleFromRegistrationRuleSet(Long campaignId, Long eventId, Rule rule) {
+    ruleFacade.removeRuleFromRegistrationRuleSet(campaignId, eventId, rule);
+  }
+
+  @Override
   public void deleteSubject(Subject subject) {
 
     evtFacade.removeSubject(subject);

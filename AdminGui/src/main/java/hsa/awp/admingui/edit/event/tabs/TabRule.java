@@ -26,11 +26,13 @@ import hsa.awp.admingui.controller.IAdminGuiController;
 import hsa.awp.admingui.rule.RulePanel;
 import hsa.awp.campaign.model.Campaign;
 import hsa.awp.event.model.Event;
+import hsa.awp.event.model.Exam;
 import hsa.awp.gui.util.LoadableDetachedModel;
 import hsa.awp.rule.model.RegistrationRuleSet;
 import hsa.awp.rule.model.Rule;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.OnChangeAjaxBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxFallbackLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -147,6 +149,7 @@ public class TabRule extends Panel {
       protected void populateItem(ListItem<MappingCampaignRule> item) {
 
         Campaign campaign = item.getModelObject().campaign;
+        final Long campaignId = campaign.getId();
         item.add(new Label("event.rule.viewContainer.campaigns.campaignName", campaign.getName()));
 
         item.add(new ListView<Rule>("event.rule.viewContainer.campaigns.rules", item.getModelObject().rules) {
@@ -156,9 +159,31 @@ public class TabRule extends Panel {
           private static final long serialVersionUID = 3744568568875419040L;
 
           @Override
-          protected void populateItem(ListItem<Rule> item) {
+          protected void populateItem(final ListItem<Rule> item) {
 
-            item.add(new Label("event.rule.viewContainer.campaigns.rules.rulename", item.getModelObject().getName()));
+            final String ruleName = item.getModelObject().getName();
+            item.add(new Label("event.rule.viewContainer.campaigns.rules.rulename", ruleName));
+
+            item.add(new AjaxFallbackLink<Exam>("event.rule.viewContainer.campaigns.rules.delete") {
+              private static final long serialVersionUID = 1L;
+
+              @Override
+              public void onClick(AjaxRequestTarget target) {
+                target.addComponent(feedbackPanel);
+                controller.deleteRuleFromRegistrationRuleSet(campaignId, event.getId(), item.getModelObject());
+
+                item.modelChanging();
+
+                // Remove item and invalidate listView
+                getList().remove(item.getModelObject());
+
+                modelChanged();
+                removeAll();
+
+                target.addComponent(viewContainer);
+                info(String.format("Regelverknüpfung für [%s] wurde gelöscht", ruleName)); // TODO Sprache
+              }
+            });
           }
         });
       }

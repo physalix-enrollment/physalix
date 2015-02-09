@@ -31,6 +31,8 @@ import java.util.Set;
 public interface IRuleFacade {
   RegistrationRuleSet addRuleToRegistrationRuleSet(Long campaign, Long event, Long mandator, Rule rule);
 
+  void removeRuleFromRegistrationRuleSet(Long campaign, Long event, Rule rule);
+
   List<Rule> findAllRules();
 
   List<RegistrationRuleSet> findRegistrationRuleSetsByEventId(Long id);

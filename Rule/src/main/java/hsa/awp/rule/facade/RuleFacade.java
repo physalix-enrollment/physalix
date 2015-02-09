@@ -89,6 +89,23 @@ public class RuleFacade implements IRuleFacade, ICampaignRuleChecker {
 
   @Override
   @Transactional
+  public void removeRuleFromRegistrationRuleSet(Long campaign, Long event, Rule rule) {
+    RegistrationRuleSet ruleSet = registrationRuleSetDao.findByCampaignAndEvent(campaign, event);
+
+    // if not found ignore this request.
+    if (ruleSet == null)
+      return;
+
+    ruleSet.removeRule(rule);
+    if (ruleSet.getRules().isEmpty()) {
+      registrationRuleSetDao.remove(ruleSet);
+    } else {
+      registrationRuleSetDao.merge(ruleSet);
+    }
+  }
+
+  @Override
+  @Transactional
   public List<Rule> findAllRules() {
 
     return ruleDao.findAll();

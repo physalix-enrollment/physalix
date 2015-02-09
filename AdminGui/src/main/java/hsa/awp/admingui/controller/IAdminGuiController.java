@@ -253,6 +253,15 @@ public interface IAdminGuiController extends IGuiController {
   void deleteRulesConnection(Long campaignId, Long eventId);
 
   /**
+   * Deletes all rules for a given {@link Campaign} and a given {@link Event}.
+   *
+   * @param campaignId campaign to look for.
+   * @param eventId    event to look for.
+   * @param rule       rule to remove.
+   */
+  void deleteRuleFromRegistrationRuleSet(Long campaignId, Long eventId, Rule rule);
+
+  /**
    * Removes a {@link Subject}. Only works if there is no {@link Event} attached.
    *
    * @param subject {@link Subject} to delete.

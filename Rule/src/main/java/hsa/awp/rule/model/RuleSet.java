@@ -48,7 +48,7 @@ public abstract class RuleSet extends AbstractMandatorableDomainObject<Long> imp
   /**
    * The {@link Set} of {@link Rule}s which are combined with this {@link RuleSet}.
    */
-  @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+  @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.REFRESH})
   private Set<Rule> rules;
 
 
