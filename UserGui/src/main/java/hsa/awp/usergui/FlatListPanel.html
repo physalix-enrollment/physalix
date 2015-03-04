@@ -35,11 +35,20 @@
 
 <wicket:panel>
 
+    <div id="feedbackPanel" wicket:id="feedbackPanel"/>
 
     <div id="flatlistBox">
 
         <div wicket:id="flatlist.container">
             <span wicket:id="flatlist.userInfo"> Kampangenname: Phase: Phasenname vom xx.xx.xx. hh:mm bis xx.xx.xx hh:mm</span>
+
+            <div wicket:id="flatlist.registrationInfo">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr><td>Insgesamt m&ouml;gliche Kurse:</td><td><span wicket:id="flatlist.registrationInfo.maximum"/></td></tr>
+                    <tr><td>Bereits belegte Kurse:</td><td><span wicket:id="flatlist.registrationInfo.alreadyUsed"/></td></tr>
+                    <tr><td>Noch buchbare Kurse:</td><td><span wicket:id="flatlist.registrationInfo.registrationsLeft"/></td></tr>
+                </table>
+            </div>
 
             <div class="refresh">
                 <a wicket:id="flatlist.refresh">aktualisieren</a>

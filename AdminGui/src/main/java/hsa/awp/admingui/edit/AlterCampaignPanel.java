@@ -149,7 +149,7 @@ public class AlterCampaignPanel extends AbstractCampaign {
   }
 
   @Override
-  protected void workResult(String name, String email, List<Event> events, List<Procedure> proceduresInput, Calendar startShow, Calendar endShow, List<StudyCourse> studyCourses, String detailText) {
+  protected void workResult(String name, String email, List<Event> events, List<Procedure> proceduresInput, Calendar startShow, Calendar endShow, List<StudyCourse> studyCourses, String detailText, Integer maximumConfirmedRegistrations) {
 
     List<Procedure> procedures = new LinkedList<Procedure>(proceduresInput);
     HashSet<Long> eventIds = new HashSet<Long>();
@@ -200,6 +200,7 @@ public class AlterCampaignPanel extends AbstractCampaign {
     campaign.setStartShow(startShow);
     campaign.setEndShow(endShow);
     campaign.setEventIds(eventIds);
+    campaign.setMaximumConfirmedRegistrations(maximumConfirmedRegistrations);
 
     getController().updateCampaign(campaign);
   }

@@ -44,11 +44,9 @@ public class Campaign extends AbstractMandatorableDomainObject<Long> {
    */
   private static final long serialVersionUID = -4470037949918491800L;
 
-  /**
-   * Unique name of the {@link Campaign}.
-   */
-  @Column
   private String correspondentEMail;
+
+  private Integer maximumConfirmedRegistrations;
 
   @Column(length = 800)
   private String detailText;
@@ -338,7 +336,7 @@ public class Campaign extends AbstractMandatorableDomainObject<Long> {
    *
    * @param eventIds identifiers of the associated events as List.
    */
-  public void setEventIds(HashSet<Long> eventIds) {
+  public void setEventIds(Set<Long> eventIds) {
 
     this.eventIds = eventIds;
   }
@@ -464,5 +462,21 @@ public class Campaign extends AbstractMandatorableDomainObject<Long> {
   public void setId(Long id) {
 
     this.id = id;
+  }
+
+  /**
+   * @deprecated use {@link #getMaximumConfirmedRegistrationsOrDefault()}
+   */
+  @Deprecated
+  public Integer getMaximumConfirmedRegistrations() {
+    return maximumConfirmedRegistrations;
+  }
+
+  public int getMaximumConfirmedRegistrationsOrDefault() {
+    return maximumConfirmedRegistrations == null ? 0 : maximumConfirmedRegistrations;
+  }
+
+  public void setMaximumConfirmedRegistrations(Integer maximumConfirmedRegistrations) {
+    this.maximumConfirmedRegistrations = maximumConfirmedRegistrations == null ? 0 : maximumConfirmedRegistrations;
   }
 }

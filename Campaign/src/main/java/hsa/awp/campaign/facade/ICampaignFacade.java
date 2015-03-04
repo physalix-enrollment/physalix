@@ -53,6 +53,8 @@ public interface ICampaignFacade {
    */
   long countConfirmedRegistrationsByProcedure(Procedure procedure);
 
+  long countConfirmedRegistrationsByParticipantIdAndCampaignId(Long participantId, Long campaignId);
+
   /**
    * Looks for newly active {@link Campaign}s where the startShow of the {@link Campaign} is between a given since data and now.
    * If no since date is given, all activate {@link Campaign}s will be returned.

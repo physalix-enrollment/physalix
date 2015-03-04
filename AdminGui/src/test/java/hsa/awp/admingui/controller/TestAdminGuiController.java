@@ -220,7 +220,7 @@ public class TestAdminGuiController {
     List<Procedure> procedures = new LinkedList<Procedure>();
     procedures.add(FifoProcedure.getInstance(0L));
 
-    List<Long> events = new LinkedList<Long>();
+    Set<Long> events = new HashSet<Long>();
     events.add(32L);
     events.add(13L);
 
@@ -228,7 +228,7 @@ public class TestAdminGuiController {
     studyCourses.add(32L);
     studyCourses.add(13L);
 
-    Campaign campaign = adminGuiController.createCampaign(name, email, endShow, startShow, events, procedures, null, studyCourses, "text");
+    Campaign campaign = adminGuiController.createCampaign(name, email, endShow, startShow, events, procedures, null, studyCourses, "text", 0);
 
     assertNotNull(campaign);
     assertEquals(0L, campaign.getId().longValue());

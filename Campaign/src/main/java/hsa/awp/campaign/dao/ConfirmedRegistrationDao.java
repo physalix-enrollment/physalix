@@ -85,6 +85,17 @@ public class ConfirmedRegistrationDao extends AbstractMandatorableDao<ConfirmedR
     return (Long) query.getSingleResult();
   }
 
+  @Override
+  public long countItemsByParticipantIdAndCampaignId(Long participantId, Long campaignId) {
+    Query query = getEntityManager().createQuery(
+            "select count(o) from " + ConfirmedRegistration.class.getSimpleName() + " o where o.participant = :participant and o.procedure.campaign.id = :campaign");
+    query.setParameter("participant", participantId);
+    query.setParameter("campaign", campaignId);
+
+    return (Long) query.getSingleResult();
+
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public List<ConfirmedRegistration> findByProcedure(Procedure procedure) {

@@ -127,6 +127,7 @@ public abstract class GenericDaoTest<T extends IGenericDomainModel<K>, D extends
   public void before() {
 
     assertInitializedDependencies();
+    cleanUpDatabase();
   }
 
   /**
@@ -139,10 +140,15 @@ public abstract class GenericDaoTest<T extends IGenericDomainModel<K>, D extends
     if (entityManager.getTransaction().isActive()) {
       entityManager.getTransaction().rollback();
     }
+    cleanUpDatabase();
+  }
 
+  private void cleanUpDatabase() {
     // cleanup the database
     startTransaction();
-    getDao().removeAll();
+    try {
+      getDao().removeAll();
+    } catch (Exception ignored) {}
     commit();
   }
 

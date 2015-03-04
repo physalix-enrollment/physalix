@@ -21,9 +21,11 @@
 
 package hsa.awp.scire.procedureLogic;
 
+import hsa.awp.campaign.model.Campaign;
 import hsa.awp.campaign.model.ConfirmedRegistration;
 import hsa.awp.campaign.model.FifoProcedure;
 import hsa.awp.event.model.Event;
+import hsa.awp.scire.exception.MaximumAllowedRegistrationsExceededException;
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.user.model.User;
 import org.slf4j.LoggerFactory;
@@ -45,6 +47,18 @@ public class FifoProcedureLogic extends AbstractProcedureLogic<FifoProcedure> im
   @Override
   @Transactional
   public synchronized void register(Event event, User participant, SingleUser initiator, boolean examOnly) {
+
+    Campaign campaign = getProcedure().getCampaign();
+    int maximumAllowedRegistrations = campaign.getMaximumConfirmedRegistrationsOrDefault();
+
+    if (maximumAllowedRegistrations > 0)
+    {
+      long registrationCount = campaignFacade.countConfirmedRegistrationsByParticipantIdAndCampaignId(participant.getId(), campaign.getId());
+      if (registrationCount > maximumAllowedRegistrations)
+      {
+        throw new MaximumAllowedRegistrationsExceededException();
+      }
+    }
 
     ConfirmedRegistration confirmedRegistration = singleRegistration(event, participant, initiator, examOnly);
     sendMail(confirmedRegistration);

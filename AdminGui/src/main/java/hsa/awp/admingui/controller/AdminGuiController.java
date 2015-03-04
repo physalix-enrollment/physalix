@@ -177,18 +177,19 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
   }
 
   @Override
-  public Campaign createCampaign(String name, String email, Calendar endShow, Calendar startShow, List<Long> evts, List<Procedure> proc, Session session, Set<Long> studyCourses, String detailText) {
+  public Campaign createCampaign(String name, String email, Calendar endShow, Calendar startShow, Set<Long> eventIds, List<Procedure> proc, Session session, Set<Long> studyCourseIds, String detailText, Integer maximumConfirmedRegistrations) {
 
     Campaign campaign = null;
     try {
       campaign = Campaign.getInstance(getActiveMandator(session));
       campaign.setEndShow(endShow);
       campaign.setStartShow(startShow);
-      campaign.setEventIds(new HashSet<Long>(evts));
+      campaign.setEventIds(eventIds);
       campaign.setName(name);
       campaign.setCorrespondentEMail(email);
-      campaign.setStudyCourseIds(studyCourses);
+      campaign.setStudyCourseIds(studyCourseIds);
       campaign.setDetailText(detailText);
+      campaign.setMaximumConfirmedRegistrations(maximumConfirmedRegistrations);
 
       camFacade.saveCampaign(campaign);
 
@@ -1136,38 +1137,6 @@ public class AdminGuiController extends GuiController implements IAdminGuiContro
     });
 
     return mandators;
-  }
-
-  @Override
-  public Campaign createCampaign(String name, String email, Calendar endShow,
-                                 Calendar startShow, LinkedList<Long> linkedList,
-                                 List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
-                                 String detailText) {
-    Campaign campaign = null;
-    try {
-      campaign = Campaign.getInstance(getActiveMandator(session));
-      campaign.setEndShow(endShow);
-      campaign.setStartShow(startShow);
-      campaign.setEventIds(new HashSet<Long>(linkedList));
-      campaign.setName(name);
-      campaign.setCorrespondentEMail(email);
-      campaign.setStudyCourseIds(studyCourseIds);
-      campaign.setDetailText(detailText);
-
-      camFacade.saveCampaign(campaign);
-
-      for (Procedure p : procedures) {
-        campaign.addProcedure(p);
-        camFacade.updateProcedure(p);
-      }
-
-      camFacade.updateCampaign(campaign);
-    } catch (DataAccessException dae) {
-      dae.printStackTrace();
-      return null;
-    }
-
-    return campaign;
   }
 
   /**

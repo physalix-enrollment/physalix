@@ -56,6 +56,8 @@ public interface IConfirmedRegistrationDao extends IAbstractMandatorableDao<Conf
 
   long countItemsByProcedureAndMandator(Procedure procedure, Long mandatorId);
 
+  long countItemsByParticipantIdAndCampaignId(Long participantId, Long campaignId);
+
   /**
    * Looks for all {@link ConfirmedRegistration}s associated with an event in {@link Campaign}.
    *

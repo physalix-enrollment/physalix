@@ -332,6 +332,11 @@ public class GuiController implements IGuiController {
   }
 
   @Override
+  public long countConfirmedRegistrationsByParticipantIdAndCampaignId(Long participantId, Long campaignId) {
+    return camFacade.countConfirmedRegistrationsByParticipantIdAndCampaignId(participantId, campaignId);
+  }
+
+  @Override
   public boolean hasParticipantConfirmedRegistrationInEvent(User participant, Event event) {
     return camFacade.hasParticipantConfirmedRegistrationInEvent(participant.getId(), event.getId());
   }

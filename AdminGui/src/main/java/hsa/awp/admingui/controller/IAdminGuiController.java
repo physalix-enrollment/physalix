@@ -49,7 +49,7 @@ public interface IAdminGuiController extends IGuiController {
   /**
    * Looks for a {@link Category} using a given name.
    *
-   * @param name name of the {@link Category}.
+   * @param id of the {@link Category}.
    * @return foundCategory
    */
   Category getCategoryById(Long id);
@@ -118,12 +118,13 @@ public interface IAdminGuiController extends IGuiController {
    * @param name         of the {@link hsa.awp.campaign.model.Campaign}.
    * @param endShow      the {@link java.util.Calendar} when the event disappears
    * @param startShow    the {@link java.util.Calendar} when the event appears
-   * @param evts         a {@link java.util.List} of Event IDs
+   * @param eventIds         a {@link java.util.Set} of Event IDs
    * @param proc         a {@link java.util.List} of Procedures
    * @param studyCourses
+   * @param maximumConfirmedRegistrations
    * @return the created {@link Campaign}
    */
-  Campaign createCampaign(String name, String email, Calendar endShow, Calendar startShow, List<Long> evts, List<Procedure> proc, Session session, Set<Long> studyCourses, String detailText);
+  Campaign createCampaign(String name, String email, Calendar endShow, Calendar startShow, Set<Long> eventIds, List<Procedure> proc, Session session, Set<Long> studyCourses, String detailText, Integer maximumConfirmedRegistrations);
 
   /**
    * Creates a new {@link Category} with the given name.
@@ -645,9 +646,4 @@ public interface IAdminGuiController extends IGuiController {
   StudyCourse getStudyCourseById(Long id);
 
   void testTemplate(String email, String template);
-
-  Campaign createCampaign(String name, String email, Calendar endShow,
-		Calendar startShow, LinkedList<Long> linkedList,
-		List<Procedure> procedures, Session session, Set<Long> studyCourseIds,
-		String detailText);
 }

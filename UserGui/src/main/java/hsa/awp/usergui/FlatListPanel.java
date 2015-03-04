@@ -21,14 +21,12 @@
 
 package hsa.awp.usergui;
 
-import hsa.awp.campaign.model.Campaign;
-import hsa.awp.campaign.model.FifoDisplayMode;
-import hsa.awp.campaign.model.FifoProcedure;
-import hsa.awp.campaign.model.Procedure;
+import hsa.awp.campaign.model.*;
 import hsa.awp.event.model.Category;
 import hsa.awp.event.model.Event;
 import hsa.awp.event.util.EventSorter;
 import hsa.awp.gui.util.LoadableDetachedModel;
+import hsa.awp.scire.exception.MaximumAllowedRegistrationsExceededException;
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.usergui.controller.IUserGuiController;
 import hsa.awp.usergui.util.JavascriptEventConfirmation;
@@ -44,6 +42,7 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
@@ -76,9 +75,20 @@ public class FlatListPanel extends Panel {
   private Set<Category> categories;
 
   /**
+   * Feedback panel to display success or errors.
+   */
+  private FeedbackPanel feedbackPanel;
+
+  /**
    * percent of remaining slots in event to show yellow icon.
    */
   private float capacityPercent = 0.2f;
+
+  private int maximumAllowedRegistrations;
+
+  private long usedRegistrations;
+
+  private long registrationsLeft;
 
   /**
    * GuiController which feeds the Gui with Data.
@@ -108,6 +118,7 @@ public class FlatListPanel extends Panel {
     categories = getCategoriesOfEvents(events);
 
     // find events of category where user is allowed
+    updateRegistrationInfo(campaign);
 
     final LoadableDetachedModel<List<Category>> categoriesModel = new LoadableDetachedModel<List<Category>>() {
       /**
@@ -173,14 +184,22 @@ public class FlatListPanel extends Panel {
               public void onClick() {
                 FifoProcedure fifo = getCurrentFifoProcedure(campaign);
                 String initiator = SecurityContextHolder.getContext().getAuthentication().getName();
-                controller.registerWithFifoProcedure(fifo, event, initiator, initiator, true);
+                try {
+                  controller.registerWithFifoProcedure(fifo, event, initiator, initiator, true);
+                  updateRegistrationInfo(campaign);
+                } catch (MaximumAllowedRegistrationsExceededException e)
+                {
+                  error("Maximale Registrierungen erreicht. / Maximum registrations reached.");
+                }
               }
             };
 
             Image icon = new Image("icon");
             icon.add(new AttributeModifier("src", true, new Model<String>()));
 
-            if (controller.hasParticipantConfirmedRegistrationInEvent(singleUser, event)) {
+            if ((maximumAllowedRegistrations > 0 && registrationsLeft <= 0)
+                    ||
+                    controller.hasParticipantConfirmedRegistrationInEvent(singleUser, event)) {
               link.setVisible(false);
               item.add(new AttributeAppender("class", new Model<String>("disabled"), " "));
             }
@@ -272,6 +291,34 @@ public class FlatListPanel extends Panel {
         return sb.toString();
       }
     }));
+
+    WebMarkupContainer registrationInfoContainer = new WebMarkupContainer("flatlist.registrationInfo");
+    flatListContainer.add(registrationInfoContainer);
+
+    registrationInfoContainer.setVisible(maximumAllowedRegistrations > 0);
+    registrationInfoContainer.add(new Label("flatlist.registrationInfo.maximum", String.valueOf(maximumAllowedRegistrations)));
+    registrationInfoContainer.add(new Label("flatlist.registrationInfo.alreadyUsed", new LoadableDetachedModel<String>() {
+      @Override
+      protected String load() {
+        return String.valueOf(usedRegistrations);
+      }
+    }));
+    registrationInfoContainer.add(new Label("flatlist.registrationInfo.registrationsLeft", new LoadableDetachedModel<String>() {
+      @Override
+      protected String load() {
+        return String.valueOf(registrationsLeft);
+      }
+    }));
+
+    feedbackPanel = new FeedbackPanel("feedbackPanel");
+    feedbackPanel.setOutputMarkupId(true);
+    add(feedbackPanel);
+  }
+
+  private void updateRegistrationInfo(Campaign campaign) {
+    maximumAllowedRegistrations = campaign.getMaximumConfirmedRegistrationsOrDefault();
+    usedRegistrations = controller.countConfirmedRegistrationsByParticipantIdAndCampaignId(singleUser.getId(), campaign.getId());
+    registrationsLeft = maximumAllowedRegistrations - usedRegistrations;
   }
 
   private FifoProcedure getCurrentFifoProcedure(Campaign campaign) {

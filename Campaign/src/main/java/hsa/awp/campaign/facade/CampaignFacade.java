@@ -92,6 +92,12 @@ public final class CampaignFacade implements ICampaignFacade {
 
   @Transactional
   @Override
+  public long countConfirmedRegistrationsByParticipantIdAndCampaignId(Long participantId, Long campaignId) {
+    return confirmedRegistrationDao.countItemsByParticipantIdAndCampaignId(participantId, campaignId);
+  }
+
+  @Transactional
+  @Override
   public List<Campaign> findActiveCampaigns() {
 
     return campaignDao.findActive();

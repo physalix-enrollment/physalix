@@ -56,6 +56,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.spring.injection.annot.SpringBean;
 import org.apache.wicket.validation.validator.EmailAddressValidator;
+import org.apache.wicket.validation.validator.MinimumValidator;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +109,8 @@ public abstract class AbstractCampaign extends Panel {
    * name of the {@link Campaign}.
    */
   private TextField<String> name = new TextField<String>("name", new Model<String>());
+
+  private TextField<Integer> maximumConfirmedRegistrations;
 
   private TextField<String> email;
 
@@ -218,6 +221,11 @@ public abstract class AbstractCampaign extends Panel {
     name.add(StringValidator.maximumLength(40));
     name.setModelObject(getCampaign().getName());
 
+    maximumConfirmedRegistrations = new TextField<Integer>("maximumConfirmedRegistrations", new Model<Integer>());
+    maximumConfirmedRegistrations.add(new MinimumValidator<Integer>(0));
+    maximumConfirmedRegistrations.setType(Integer.class);
+    maximumConfirmedRegistrations.setModelObject(getCampaign().getMaximumConfirmedRegistrationsOrDefault());
+
     detailText = new TextArea("detailText", new Model<String>());
     detailText.setModelObject(getCampaign().getDetailText());
 
@@ -258,6 +266,7 @@ public abstract class AbstractCampaign extends Panel {
     form.add(endShow);
     form.add(startShow);
     form.add(name);
+    form.add(maximumConfirmedRegistrations);
     form.add(email);
     form.add(detailText);
     form.add(termDropDown);
@@ -293,7 +302,7 @@ public abstract class AbstractCampaign extends Panel {
           calEndShow.setTime(endShow.getModelObject());
 
           workResult(name.getModelObject(), email.getModelObject(), eventListSelector.getSelected(), procedureListSelector.getSelected(),
-              calStartShow, calEndShow, studyCourseListSelector.getSelected(), (String) detailText.getModelObject());
+              calStartShow, calEndShow, studyCourseListSelector.getSelected(), (String) detailText.getModelObject(), maximumConfirmedRegistrations.getModelObject());
           //TODO: Sprache
           feedbackPanel.info(getSuccessText());
           this.setVisible(false);
@@ -410,16 +419,16 @@ public abstract class AbstractCampaign extends Panel {
 
   /**
    * Method that will be called when the validation was successful.
-   *
-   * @param name         name of the {@link hsa.awp.campaign.model.Campaign}.
+   *  @param name         name of the {@link hsa.awp.campaign.model.Campaign}.
    * @param events       selected events of the {@link hsa.awp.campaign.model.Campaign}.
    * @param procedures   selected procedures of the {@link hsa.awp.campaign.model.Campaign}.
    * @param startShow    startShow of the {@link hsa.awp.campaign.model.Campaign}.
    * @param endShow      endShow of the {@link hsa.awp.campaign.model.Campaign}.
    * @param studyCourses
+   * @param maximumConfirmedRegistrations
    */
   protected abstract void workResult(String name, String email, List<Event> events, List<Procedure> procedures, Calendar startShow,
-                                     Calendar endShow, List<StudyCourse> studyCourses, String detailText);
+                                     Calendar endShow, List<StudyCourse> studyCourses, String detailText, Integer maximumConfirmedRegistrations);
 
   /**
    * Getter for the text that shall be viewed on success.
