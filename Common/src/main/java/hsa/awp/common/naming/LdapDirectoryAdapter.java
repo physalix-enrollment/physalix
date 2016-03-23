@@ -26,10 +26,7 @@ import hsa.awp.common.exception.ProgrammingErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Context;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.ServiceUnavailableException;
+import javax.naming.*;
 import javax.naming.directory.*;
 import java.util.*;
 
@@ -135,11 +132,16 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
       int start = pattern.indexOf("{0},") + 4;
       String searchPattern = pattern.substring(start);
 
-      NamingEnumeration<SearchResult> searchResult = dirContext.search(searchPattern, matchingAttributes,
-          defaultAttrIds);
-
-      if (searchResult.hasMore()) {
-        return searchResult.next().getAttributes();
+      try {
+        NamingEnumeration<SearchResult> searchResult = dirContext.search(searchPattern, matchingAttributes,
+            defaultAttrIds);
+        if (searchResult.hasMore()) {
+          return searchResult.next().getAttributes();
+        }
+      } catch (CommunicationException e) {
+        logger.error("retry because of unavailable service", e);
+        dirty = true;
+        return getAttributes(uuid);
       }
     }
     throw new NamingException("No user with uidNumber" + uuid + " found.");
@@ -162,6 +164,10 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
         String searchPattern = pattern.replaceFirst("\\{0\\}", name);
         return dirContext.getAttributes(searchPattern, attrIds);
       } catch (ServiceUnavailableException e) {
+        logger.error("retry because of unavailable service", e);
+        dirty = true;
+        return getAttributes(name, attrIds);
+      } catch (CommunicationException e) {
         logger.error("retry because of unavailable service", e);
         dirty = true;
         return getAttributes(name, attrIds);
@@ -310,6 +316,8 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
 
   @Override
   public Set<String> getAllStudyCourses() {
+    cleanContext();
+
     Set<String> studyCourses = new HashSet<String>();
     for (String userDnPattern : userDnPatterns) {
       Set<String> courses = getAllStudyCourses(userDnPattern);
@@ -332,6 +340,7 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
         studyCourses.add(studyCourse);
       }
     } catch (NamingException e) {
+      dirty = true;
       throw new RuntimeException(e);
     }
     return studyCourses;
@@ -354,6 +363,7 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
     try {
       search = dirContext.search(directory, searchPattern, defaultAttrIds, null);
     } catch (NamingException e) {
+      dirty = true;
       throw new RuntimeException(e);
     }
     return search;
