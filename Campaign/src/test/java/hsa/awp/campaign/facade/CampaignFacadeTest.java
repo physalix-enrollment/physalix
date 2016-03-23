@@ -128,6 +128,7 @@ public class CampaignFacadeTest extends AbstractFacadeTest<CampaignFacade> {
   @Test
   @Transactional
   public void testGetAllCampaigns() {
+    clearCampaigns();
 
     List<Campaign> list = new ArrayList<Campaign>();
     for (int i = 0; i < 5; i++) {
@@ -138,6 +139,13 @@ public class CampaignFacadeTest extends AbstractFacadeTest<CampaignFacade> {
       list.add(c);
     }
     assertTrue(list.containsAll(campFac.getAllCampaigns()));
+  }
+
+  private void clearCampaigns() {
+    List<Campaign> allPreviouslyFound = campFac.getAllCampaigns();
+    for (Campaign campaign : allPreviouslyFound) {
+      campFac.removeCampaign(campaign);
+    }
   }
 
   /**
@@ -667,6 +675,7 @@ public class CampaignFacadeTest extends AbstractFacadeTest<CampaignFacade> {
   @Test
   @Transactional
   public void testSaveCampaign() {
+    clearCampaigns();
 
     List<Campaign> list = new ArrayList<Campaign>();
     for (int i = 0; i < 5; i++) {
@@ -733,6 +742,7 @@ public class CampaignFacadeTest extends AbstractFacadeTest<CampaignFacade> {
   @Test
   @Transactional
   public void testUpdateCampaign() {
+    clearCampaigns();
 
     List<Campaign> campaigns = new ArrayList<Campaign>();
     for (int i = 0; i < 5; i++) {
