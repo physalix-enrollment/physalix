@@ -1,7 +1,7 @@
 Physalix enrollment system
 ========
 
-[![Build Status](https://buildhive.cloudbees.com/job/physalix-enrollment/job/physalix/badge/icon)](https://buildhive.cloudbees.com/job/physalix-enrollment/job/physalix/)
+[![Build Status](https://travis-ci.org/physalix-enrollment/physalix.svg?branch=master)](https://travis-ci.org/physalix-enrollment/physalix)
 
 
 Prerequisites
