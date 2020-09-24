@@ -213,18 +213,13 @@ public class SingleUser extends User implements IGenericDomainModel<Long> {
 
   @Override
   public String toString() {
-
-    StringBuffer sb = new StringBuffer();
-
-    sb.append("---------\n");
-    sb.append("USER ").append(name).append("\n");
-    sb.append("id ").append(getId()).append("\n");
-    sb.append("username ").append(getUsername()).append("\n");
-    sb.append("uuid ").append(getUuid()).append("\n");
-    sb.append("Rollen: ").append(getRolemappings().toString()).append("\n");
-    sb.append("---------\n");
-
-    return sb.toString();
+    return super.getClass().getSimpleName() + "{" +
+            "id='" + super.getId() + '\'' +
+            ", name='" + name + '\'' +
+            ", rolemappings=" + getRolemappings() +
+            ", username='" + getUsername() + '\'' +
+            ", uuid=" + getUuid() +
+            '}';
   }
 
   /**

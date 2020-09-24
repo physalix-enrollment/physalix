@@ -302,13 +302,20 @@ public class SingleUserDirectoryDao extends AbstractDao<SingleUser, Long> implem
     if (singleUser instanceof Student) {
       Student student = (Student) singleUser;
 
-      student.setMatriculationNumber(Integer.valueOf(userProps.getProperty(IAbstractDirectory.MATRICULATIONNUMBER)));
+      String matriculationNumber = userProps.getProperty(IAbstractDirectory.MATRICULATIONNUMBER);
+      if (matriculationNumber == null) {
+        logger.warn("student login lacking matriculation number: " + student);
+      }
+      student.setMatriculationNumber(Integer.parseInt(matriculationNumber));
+
       String term = userProps.getProperty(IAbstractDirectory.TERM);
       // TODO Jojo: Workaround for term field = null
       if (term == null) {
         term = "0";
+        logger.warn("student login lacking term: " + student);
       }
-      student.setTerm(Integer.valueOf(term));
+      student.setTerm(Integer.parseInt(term));
+
 
       String studyCourseName = userProps.getProperty(IAbstractDirectory.STUDYCOURSE);
       if (studyCourseName != null) {
