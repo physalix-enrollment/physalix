@@ -28,16 +28,6 @@
     <name>awp</name>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <repositories>
-        <repository>
-            <id>com.springsource.repository.bundles.release</id>
-            <url>http://repository.springsource.com/maven/bundles/release</url>
-        </repository>
-        <repository>
-            <id>com.springsource.repository.bundles.external</id>
-            <url>http://repository.springsource.com/maven/bundles/external</url>
-        </repository>
-    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.jmock</groupId>
