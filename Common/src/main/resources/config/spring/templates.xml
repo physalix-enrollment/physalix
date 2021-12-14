@@ -21,13 +21,13 @@
   -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
     <bean name="common.template.service" class="hsa.awp.common.services.TemplateService">
-        <property name="velocityEngine" ref="velocityEngine"></property>
-        <property name="templateJarDao" ref="common.template.dao.jar"></property>
-        <property name="templateFileSystemDao" ref="common.template.dao.filesystem"></property>
+        <property name="velocityEngine" ref="velocityEngine"/>
+        <property name="templateJarDao" ref="common.template.dao.jar"/>
+        <property name="templateFileSystemDao" ref="common.template.dao.filesystem"/>
     </bean>
 
     <bean name="common.template.dao.filesystem" class="hsa.awp.common.dao.template.TemplateFileSystemDao">
@@ -39,15 +39,16 @@
         <property name="defaultTemplatePath" value="/templates/"/>
     </bean>
 
-    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="configLocation" value="$temp{velocity.engine.config}"/>
+    <bean id="velocityEngine" class="org.apache.velocity.app.VelocityEngine">
+        <constructor-arg ref="velocityConfiguration"/>
     </bean>
+    <util:properties id="velocityConfiguration" location="$temp{velocity.engine.config}"/>
 
     <bean name="common.template.properties"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="ignoreUnresolvablePlaceholders" value="false"></property>
-        <property name="placeholderPrefix" value="$temp{"></property>
-        <property name="ignoreResourceNotFound" value="true"></property>
+        <property name="ignoreUnresolvablePlaceholders" value="false"/>
+        <property name="placeholderPrefix" value="$temp{"/>
+        <property name="ignoreResourceNotFound" value="true"/>
         <property name="locations">
             <list>
                 <value>classpath:config/template.default.properties</value>

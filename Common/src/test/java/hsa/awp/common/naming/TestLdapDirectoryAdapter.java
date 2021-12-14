@@ -21,11 +21,6 @@
 
 package hsa.awp.common.naming;
 
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,11 +28,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import javax.naming.Context;
 import javax.naming.directory.BasicAttributes;
 import javax.naming.directory.InitialDirContext;
-import java.io.IOException;
 import java.util.Properties;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * This unit test validates the LdapDirectoryAdapter. The underlying directorycontext will be mocked out. The test checks if the
@@ -60,11 +58,6 @@ public class TestLdapDirectoryAdapter {
   private LdapDirectoryAdapter adapter;
 
   /**
-   * Mockery from JMOCK.
-   */
-  private Mockery mockery;
-
-  /**
    * Mocks the direcotycontext.
    */
   private InitialDirContext directoryContext;
@@ -74,90 +67,13 @@ public class TestLdapDirectoryAdapter {
    */
   private Properties ldapConfig;
 
-  /**
-   * Instantiates the mockery.
-   *
-   * @throws IOException If the ldap configuration file was not found.
-   */
-  public TestLdapDirectoryAdapter() throws IOException {
-
-    mockery = new JUnit4Mockery() {
-      {
-        setImposteriser(ClassImposteriser.INSTANCE);
-      }
-    };
-    ldapConfig = new Properties();
-    ldapConfig.load(ClassLoader.getSystemResourceAsStream(LDAP_CONFIG_FILE));
-  }
-
-  /*
-  * HELPER METHODS TO CONFIGURE MOCK BEHAVIOR
-  *
-  * Convention: mockExpect<description>() - adds new expectations to the mock mockIgnore<description>() - ignores calls onto the
-  * mock
-  */
-
-  /**
-   * Adds expectations for context configuration to the adapter.
-   *
-   * @throws Exception if something went wrong.
-   */
-  private void mockExpectConfiguration() throws Exception {
-
-    mockery.checking(new Expectations() {
-      {
-        oneOf(directoryContext).addToEnvironment(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
-
-        oneOf(directoryContext).addToEnvironment(Context.PROVIDER_URL, ldapConfig.getProperty("naming.providerURL"));
-
-        oneOf(directoryContext).addToEnvironment(Context.SECURITY_PRINCIPAL, ldapConfig.getProperty("naming.securityPrincipal"));
-
-        oneOf(directoryContext).addToEnvironment(Context.SECURITY_CREDENTIALS,
-            ldapConfig.getProperty("naming.securityCredentials"));
-
-        oneOf(directoryContext).addToEnvironment(Context.SECURITY_PROTOCOL, ldapConfig.getProperty("naming.securityProtocol"));
-
-        oneOf(directoryContext).addToEnvironment(Context.SECURITY_AUTHENTICATION,
-            ldapConfig.getProperty("naming.securityAuthentication"));
-      }
-    });
-  }
-
-  /**
-   * Does initial configuration tasks before every test.
-   *
-   * @throws Exception if something went wrong.
-   */
   @Before
   public void setUp() throws Exception {
+    ldapConfig = new Properties();
+    ldapConfig.load(ClassLoader.getSystemResourceAsStream(LDAP_CONFIG_FILE));
 
-    directoryContext = mockery.mock(InitialDirContext.class);
-    setUpAdapter();
-  }
-
-  /*
-  * SOME HELPER METHODS
-  */
-
-  /**
-   * Sets up the adapter.
-   *
-   * @throws Exception if something went wrong.
-   */
-  private void setUpAdapter() throws Exception {
-    // mockExpectConfiguration();
+    directoryContext = mock(InitialDirContext.class);
     adapter.setDirContext(directoryContext);
-  }
-
-  /**
-   * Checks if the mockery is satisfied.
-   *
-   * @throws Exception if something went wrong.
-   */
-  @After
-  public void tearDown() throws Exception {
-
-    mockery.assertIsSatisfied();
   }
 
   /**
@@ -178,13 +94,8 @@ public class TestLdapDirectoryAdapter {
    * @throws Exception if something went wrong.
    */
   private void mockIgnoreAttributesLookup() throws Exception {
-
-    mockery.checking(new Expectations() {
-      {
-        ignoring(directoryContext).getAttributes(with(any(String.class)), with(any(String[].class)));
-        will(returnValue(new BasicAttributes()));
-      }
-    });
+    when(directoryContext.getAttributes(any(String.class), any(String[].class)))
+            .thenReturn(new BasicAttributes());
   }
 
   /**
@@ -194,15 +105,10 @@ public class TestLdapDirectoryAdapter {
    */
   @Test
   public void testGetAttributesString() throws Exception {
-
-    final String testname = "hans";
-    mockery.checking(new Expectations() {
-      {
-        oneOf(directoryContext).getAttributes("uid=" + testname + ",ou=People,dc=domain,dc=com",
-            ldapConfig.getProperty("naming.fields").split(","));
-      }
-    });
+    String testname = "hans";
     adapter.getAttributes(testname);
+    verify(directoryContext).getAttributes("uid=" + testname + ",ou=People,dc=domain,dc=com",
+            ldapConfig.getProperty("naming.fields").split(","));
   }
 
   /**
@@ -212,14 +118,9 @@ public class TestLdapDirectoryAdapter {
    */
   @Test
   public void testGetAttributesStringStringArray() throws Exception {
-
-    final String testname = "hans";
-    final String[] testAttribs = {"uid", "name", "semester"};
-    mockery.checking(new Expectations() {
-      {
-        oneOf(directoryContext).getAttributes("uid=" + testname + ",ou=People,dc=domain,dc=com", testAttribs);
-      }
-    });
+    String testname = "hans";
+    String[] testAttribs = {"uid", "name", "semester"};
     adapter.getAttributes(testname, testAttribs);
+    verify(directoryContext).getAttributes("uid=" + testname + ",ou=People,dc=domain,dc=com", testAttribs);
   }
 }

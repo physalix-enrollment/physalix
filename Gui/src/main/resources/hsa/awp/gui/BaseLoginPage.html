@@ -33,7 +33,7 @@
 <wicket:child/>
 
 <form
-        action='j_spring_security_check?spring-security-redirect=/'
+        action='login?spring-security-redirect=/'
         method='post'>
 
     <div class="header">
@@ -45,10 +45,10 @@
     <div class="container">
 
         <div class="name"><label for="userName">Benutzername</label> <input
-                name="j_username" type="text"/></div>
+                name="username" type="text"/></div>
 
         <div class="password"><label for="password">Passwort</label> <input
-                name="j_password" type="password"/></div>
+                name="password" type="password"/></div>
         <span wicket:id="feedback"/>
 
         <div><input type="submit" value=" Einloggen "/></div>

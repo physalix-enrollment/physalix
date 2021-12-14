@@ -29,30 +29,4 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
-    <bean id="common.logging.debugInterceptor" class="hsa.awp.common.logging.DebugInterceptor">
-        <property name="logException" value="true"></property>
-        <property name="logInTargetContext" value="true"></property>
-        <property name="logParamters" value="true"></property>
-        <property name="logReturnValue" value="true"></property>
-    </bean>
-
-    <bean id="test" class="org.springframework.aop.interceptor.DebugInterceptor">
-        <property name="useDynamicLogger" value="true"></property>
-    </bean>
-
-    <aop:config>
-        <!-- 
-        <aop:pointcut id="common.logging.facadePointcut" expression="execution (* hsa.awp.*.I*.* (..))" />
-         -->
-        <aop:pointcut id="common.logging.facadePointcut" expression="execution (* hsa.awp.*.facade.I*Facade.* (..))"/>
-        <aop:pointcut id="common.logging.daoPointcut" expression="execution (* hsa.awp.*.dao.I*Dao.* (..))"/>
-        <aop:pointcut id="common.logging.scirePointcut" expression="execution (* hsa.awp.scire.*.I*.* (..))"/>
-
-        <aop:advisor advice-ref="common.logging.debugInterceptor" pointcut-ref="common.logging.facadePointcut"/>
-
-        <aop:advisor advice-ref="common.logging.debugInterceptor" pointcut-ref="common.logging.daoPointcut"/>
-        <aop:advisor advice-ref="common.logging.debugInterceptor" pointcut-ref="common.logging.scirePointcut"/>
-        <!--  -->
-    </aop:config>
-
 </beans>

@@ -32,12 +32,6 @@
     <packaging>war</packaging>
     <name>AdminGui</name>
     <version>1.0-SNAPSHOT</version>
-    <!-- TODO project name  -->
-    <description></description>
-    <!--
-         TODO <organization> <name>company name</name> <url>company url</url>
-         </organization>
-     -->
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -45,37 +39,22 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <repositories>
-        <repository>
-            <releases>
-                <updatePolicy>always</updatePolicy>
-            </releases>
-            <id>Selenium</id>
-            <name>Selenium</name>
-            <url>http://nexus.openqa.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>itextpdf.com</id>
-            <name>Maven Repository for iText</name>
-            <url>http://maven.itextpdf.com/</url>
-        </repository>
-
-    </repositories>
-
+    <properties>
+        <wicket.version>7.18.0</wicket.version>
+        <jetty.version>6.1.26</jetty.version>
+    </properties>
     <dependencies>
-
-
         <!-- iText -->
         <dependency>
             <groupId>com.itextpdf</groupId>
             <artifactId>itextpdf</artifactId>
-            <version>5.5.9</version>
+            <version>5.5.13.2</version>
         </dependency>
 
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket</artifactId>
+            <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
         </dependency>
         <!-- WICKET-SPRING DEPENDENCIES -->
@@ -93,7 +72,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium.client-drivers</groupId>
             <artifactId>selenium-java-client-driver</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -102,12 +81,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.4.2</version>
+            <version>1.7.32</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <version>1.2.17</version>
         </dependency>
 
         <!--  JUNIT DEPENDENCY FOR TESTING -->
@@ -164,12 +143,12 @@
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-datetime</artifactId>
-            <version>1.4.8</version>
+            <version>${wicket.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
-            <version>1.8.0.10</version>
+            <version>2.6.1</version>
         </dependency>
         <dependency>
             <groupId>hsa.awp.common</groupId>
@@ -263,8 +242,4 @@
             </activation>
         </profile>
     </profiles>
-    <properties>
-        <wicket.version>1.4.7</wicket.version>
-        <jetty.version>6.1.26</jetty.version>
-    </properties>
 </project>

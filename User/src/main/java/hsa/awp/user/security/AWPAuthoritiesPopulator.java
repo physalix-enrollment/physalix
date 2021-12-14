@@ -31,9 +31,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -58,6 +57,7 @@ public class AWPAuthoritiesPopulator implements LdapAuthoritiesPopulator {
     initialSysadmins = new LinkedList<String>();
   }
 
+//  @Transactional
   @Override
   public Collection<GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
 
@@ -70,7 +70,7 @@ public class AWPAuthoritiesPopulator implements LdapAuthoritiesPopulator {
     SingleUser currentUser = getAndPersistUser(username);
 
     for (RoleMapping roleMapping : currentUser.getRolemappings()) {
-      result.add(new GrantedAuthorityImpl(roleMapping.getRole().toString()));
+      result.add(new SimpleGrantedAuthority(roleMapping.getRole().toString()));
     }
     return result;
   }
@@ -81,7 +81,6 @@ public class AWPAuthoritiesPopulator implements LdapAuthoritiesPopulator {
    * @param username - the username to lookup
    * @return A new user object.
    */
-  @Transactional
   private SingleUser getAndPersistUser(String username) {
 
     SingleUser currentUser;
