@@ -40,7 +40,6 @@
         </license>
     </licenses>
     <properties>
-        <wicket.version>7.18.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
     </properties>
     <dependencies>
@@ -54,7 +53,7 @@
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
+            <artifactId>wicket</artifactId>
             <version>${wicket.version}</version>
         </dependency>
         <!-- WICKET-SPRING DEPENDENCIES -->
@@ -203,22 +202,9 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-eclipse-plugin</artifactId>
-                <configuration>
-                    <downloadSources>true</downloadSources>
-                </configuration>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
             </plugin>
-            <!--
-                   <plugin> <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-dependency-plugin</artifactId>
-                   <version>2.1</version> <executions> <execution>
-                   <id>copy-dependencies</id> <phase>process-resources</phase> <goals>
-                   <goal>copy-dependencies</goal> </goals> <configuration>
-                   <outputDirectory>${basedir}/src/main/webapp/WEB-INF/lib</outputDirectory>
-                   <includeScope>compile</includeScope>
-                   <excludeScope>test</excludeScope> </configuration> </execution>
-                   </executions> </plugin>
-               -->
         </plugins>
     </build>
     <profiles>

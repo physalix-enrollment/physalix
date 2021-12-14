@@ -33,14 +33,13 @@
     <name>Gui</name>
     <url>http://maven.apache.org</url>
     <properties>
-        <wicket.version>7.18.0</wicket.version>
         <jetty.version>6.1.26</jetty.version>
     </properties>
     <dependencies>
         <!--  WICKET DEPENDENCIES -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
+            <artifactId>wicket</artifactId>
             <version>${wicket.version}</version>
         </dependency>
         <!-- WICKET-SPRING DEPENDENCIES -->
