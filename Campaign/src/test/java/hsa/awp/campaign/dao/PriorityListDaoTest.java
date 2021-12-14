@@ -275,14 +275,14 @@ public class PriorityListDaoTest extends GenericDaoTest<PriorityList, PriorityLi
   public void testRemovePrioLists() {
 
     PriorityListItemDao itemDao = new PriorityListItemDao();
-    itemDao.setEntityManager(TPersistenceUtil.getEntityManager());
+    initDao(itemDao);
 
     DrawProcedureDao drawDao = new DrawProcedureDao();
-    drawDao.setEntityManager(TPersistenceUtil.getEntityManager());
+    initDao(drawDao);
 
     int listSize = 10;
 
-    drawDao.getEntityManager().getTransaction().begin();
+    startTransaction();
     DrawProcedure dp = DrawProcedure.getInstance(0L);
     dp.setName("TestDrawProcedure");
 
@@ -291,7 +291,7 @@ public class PriorityListDaoTest extends GenericDaoTest<PriorityList, PriorityLi
     for (int i = 0; i < listSize; i++) {
       dp.addPriorityList(createAndPersistRandomPriorityList());
     }
-    drawDao.getEntityManager().getTransaction().commit();
+    commit();
 
     List<PriorityList> lists = getDao().findAll();
     assertEquals(listSize, lists.size());
@@ -327,16 +327,12 @@ public class PriorityListDaoTest extends GenericDaoTest<PriorityList, PriorityLi
       list.addItem(random.nextLong(), i);
     }
 
-    getDao().getEntityManager().getTransaction().begin();
-    PriorityList prioList = getDao().persist(list);
-    getDao().getEntityManager().getTransaction().commit();
-
-    return prioList;
+    return getDao().persist(list);
   }
 
   private void removePriorityListDummyLogic(PriorityList item, DrawProcedureDao drawProcedureDao) {
 
-    drawProcedureDao.getEntityManager().getTransaction().begin();
+    startTransaction();
     DrawProcedure proc = item.getProcedure();
 
     if (proc != null) {
@@ -350,10 +346,8 @@ public class PriorityListDaoTest extends GenericDaoTest<PriorityList, PriorityLi
       drawProcedureDao.merge(proc);
     }
 
-    getDao().getEntityManager().getTransaction().begin();
     getDao().remove(item);
-    getDao().getEntityManager().getTransaction().commit();
 
-    drawProcedureDao.getEntityManager().getTransaction().commit();
+    commit();
   }
 }
