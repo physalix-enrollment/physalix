@@ -39,9 +39,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <properties>
-        <jetty.version>6.1.26</jetty.version>
-    </properties>
     <dependencies>
         <!--  WICKET DEPENDENCIES -->
         <dependency>
@@ -80,20 +77,14 @@
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
-            <version>${jetty.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-management</artifactId>
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
@@ -172,8 +163,9 @@
         </testResources>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <version>${jetty.version}</version>
                 <configuration>
                     <webAppConfig>
                         <extraClasspath>${user.home}/.jetty/extendedClasspath/</extraClasspath>

@@ -39,9 +39,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <properties>
-        <jetty.version>6.1.26</jetty.version>
-    </properties>
     <dependencies>
         <!-- iText -->
         <dependency>
@@ -92,22 +89,22 @@
 
         <!--  JETTY DEPENDENCIES FOR TESTING  -->
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty</artifactId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
             <version>${jetty.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mortbay.jetty</groupId>
-            <artifactId>jetty-management</artifactId>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
-            <scope>provided</scope>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>hsa.awp.event</groupId>
@@ -191,8 +188,8 @@
         </testResources>
         <plugins>
             <plugin>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>maven-jetty-plugin</artifactId>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
                 <version>${jetty.version}</version>
                 <configuration>
                     <webAppConfig>

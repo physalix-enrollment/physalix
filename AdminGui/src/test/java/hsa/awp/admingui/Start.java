@@ -21,10 +21,10 @@
 
 package hsa.awp.admingui;
 
-import org.mortbay.jetty.Connector;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.bio.SocketConnector;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 /**
  * This class is for a temporary runtime instance of the jetty webserver.
@@ -48,10 +48,10 @@ public final class Start {
   public static void main(String[] args) throws Exception {
 
     Server server = new Server();
-    SocketConnector connector = new SocketConnector();
+    ServerConnector connector = new ServerConnector(server);
 
     // Set some timeout options to make debugging easier.
-    connector.setMaxIdleTime(1000 * 60 * 60);
+    connector.setIdleTimeout(1000 * 60 * 60);
     connector.setSoLingerTime(-1);
     connector.setPort(8081);
     server.setConnectors(new Connector[]{connector});
@@ -61,13 +61,7 @@ public final class Start {
     bb.setContextPath("/");
     bb.setWar("src/main/webapp");
 
-    // START JMX SERVER
-    // MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
-    // MBeanContainer mBeanContainer = new MBeanContainer(mBeanServer);
-    // server.getContainer().addEventListener(mBeanContainer);
-    // mBeanContainer.start();
-
-    server.addHandler(bb);
+    server.setHandler(bb);
 
     try {
       server.start();
