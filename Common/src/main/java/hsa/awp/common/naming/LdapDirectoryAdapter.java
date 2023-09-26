@@ -321,7 +321,7 @@ public class LdapDirectoryAdapter implements IDirectoryAdapter {
     Set<String> studyCourses = new HashSet<String>();
     for (String userDnPattern : userDnPatterns) {
       Set<String> courses = getAllStudyCourses(userDnPattern);
-      studyCourses.addAll(studyCourses);
+      studyCourses.addAll(courses);
     }
 
     return studyCourses;
