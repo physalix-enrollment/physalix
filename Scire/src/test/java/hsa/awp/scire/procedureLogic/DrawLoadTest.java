@@ -47,7 +47,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -57,7 +56,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:config/spring/DrawProcedureLogicTest.xml")
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Ignore
 public class DrawLoadTest {
   /**

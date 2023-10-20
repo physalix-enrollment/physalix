@@ -35,7 +35,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import javax.annotation.Resource;
 import java.util.Calendar;
@@ -47,7 +46,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:config/spring/TestController.xml")
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class TestController extends OpenEntityManagerInTest {
   @Resource(name = "scire.controller")
   private IScireController controller;
