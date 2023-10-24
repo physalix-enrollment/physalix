@@ -9,4 +9,5 @@ target
 .settings
 
 *.log
-logs
+phx/logs
+phx/config

@@ -41,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,6 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:/config/spring/SingleUserDirectoryDaoTest.xml")
-@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 public class TestSingleUserDirectoryDao extends GenericDaoTest<SingleUser, SingleUserDirectoryDao, Long> {
   /**
    * The low level directory - will be mocked.

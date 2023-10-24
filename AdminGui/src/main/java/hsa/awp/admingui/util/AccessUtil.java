@@ -67,7 +67,7 @@ public class AccessUtil {
     return false;
   }
 
-  public static Collection<GrantedAuthority> getAuthorities() {
+  public static Collection<? extends GrantedAuthority> getAuthorities() {
     return SecurityContextHolder.getContext().getAuthentication().getAuthorities();
   }
 }

@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -36,7 +35,6 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:config/spring/EntityBuilderTest.xml")
-@TransactionConfiguration(defaultRollback = true)
 public class EntityBuilderPersistingTest {
   @Resource(name = "hsa.awp.common.entityBuilder.EntityBuilderContext")
   private EntityBuilderContext context;

@@ -46,7 +46,7 @@
         <property name="persistenceUnitName" value="RealDatabase"></property>
 
         <property name="jpaVendorAdapter">
-            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+            <bean class="hsa.awp.common.persistence.CustomHibernateJpaVendorAdapter">
                 <property name="generateDdl" value="$db{db.generateDdl}"></property>
                 <property name="showSql" value="$db{db.showSql}"></property>
                 <property name="database" value="$db{db.database}"></property>

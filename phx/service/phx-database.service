@@ -1,0 +1,16 @@
+[Unit]
+Description=Physalix Enrollment System Database
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory=/phx
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStart=./service/start-database.sh %n
+ExecStop=/usr/bin/docker stop %n
+
+[Install]
+WantedBy=multi-user.target

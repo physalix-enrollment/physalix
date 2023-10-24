@@ -12,27 +12,20 @@ import hsa.awp.event.model.Subject;
 import hsa.awp.event.model.SubjectBuilder;
 import hsa.awp.user.model.SingleUser;
 import hsa.awp.user.model.Student;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.eventFrom;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

@@ -404,7 +404,7 @@ public class Campaign extends AbstractMandatorableDomainObject<Long> {
    *
    * @param startShow date when a Campaign will start to show up in the GUI
    */
-  public final void setStartShow(Calendar startShow) {
+  public void setStartShow(Calendar startShow) {
 
     this.startShow = startShow;
   }
