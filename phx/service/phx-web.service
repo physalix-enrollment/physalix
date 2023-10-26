@@ -9,7 +9,7 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=-/usr/bin/docker stop %n
 ExecStartPre=-/usr/bin/docker rm %n
-ExecStart=./service/start-web.sh %n
+ExecStart=/phx/service/start-web.sh %n
 ExecStop=/usr/bin/docker stop %n
 
 [Install]

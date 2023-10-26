@@ -8,7 +8,6 @@ PASSWORD=$(awk -F "=" '/db.password/ {print $2}' ./config/database.properties | 
 
 docker run \
   --name "${NAME}" \
-  --detach \
   --rm \
   --publish 5432:5432 \
   --volume ./database:/var/lib/postgresql/pgdata \

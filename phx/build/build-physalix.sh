@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 ZIP_URL=$(curl -s "https://api.github.com/repos/physalix-enrollment/physalix/releases/latest" | grep "zipball_url" | cut -d : -f 2,3 | tr -d \" | tr -d ,)
-curl -L -o build/source.zip "${ZIP_URL}"
-(cd build && unzip source.zip)
+curl -L -o build/source.zip $ZIP_URL
+(cd build && unzip source.zip && mv physalix-enrollment-physalix-*/* ./ && rmdir physalix-enrollment-physalix-* && rm source.zip)
 
 mkdir -p build/AdminGui/target
 mkdir -p build/UserGui/target
