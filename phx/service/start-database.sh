@@ -9,8 +9,8 @@ PASSWORD=$(awk -F "=" '/db.password/ {print $2}' ./config/database.properties | 
 docker run \
   --name "${NAME}" \
   --rm \
-  --publish 5432:5432 \
-  --volume ./database:/var/lib/postgresql/pgdata \
+  --publish 127.0.0.1:5432:5432 \
+  --volume ./database:/var/lib/postgresql/data \
   --env "POSTGRES_DB=${DB}" \
   --env "POSTGRES_USER=${USER}" \
   --env "POSTGRES_PASSWORD=${PASSWORD}" \
