@@ -57,7 +57,7 @@ public class Event extends AbstractMandatorableDomainObject<Long> {
   /**
    * List of related Exams.
    */
-  @OneToMany(cascade = {CascadeType.MERGE})
+  @OneToMany
   @Column(nullable = false)
   private Set<Exam> exams;
 
@@ -77,7 +77,7 @@ public class Event extends AbstractMandatorableDomainObject<Long> {
   /**
    * Subject the Event is related to.
    */
-  @ManyToOne(cascade = {CascadeType.MERGE})
+  @ManyToOne
   private Subject subject;
 
   /**
@@ -89,13 +89,13 @@ public class Event extends AbstractMandatorableDomainObject<Long> {
   /**
    * Term the Event is related to.
    */
-  @ManyToOne(cascade = {CascadeType.MERGE})
+  @ManyToOne
   private Term term;
 
   /**
    * Timetable the Event is related to.
    */
-  @OneToOne(cascade = {CascadeType.MERGE})
+  @OneToOne
   private Timetable timetable;
 
   /**

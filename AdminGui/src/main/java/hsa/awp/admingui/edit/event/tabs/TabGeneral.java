@@ -240,7 +240,6 @@ public class TabGeneral extends Panel {
       @Override
       protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
 
-        int eventId = eventIdField.getModelObject();
         Subject subject = controller.getSubjectByNameAndMandator(subjectField.getModelObject(), getSession());
 
         // TODO Sprache:
@@ -250,8 +249,8 @@ public class TabGeneral extends Panel {
         } else {
           boolean isNew = event.getId() == 0L;
 
-          event.setEventId(eventId);
-          event.setMaxParticipants(new Integer(maxParticipantsField.getModelObject()));
+          event.setEventId(eventIdField.getModelObject());
+          event.setMaxParticipants(Integer.valueOf(maxParticipantsField.getModelObject()));
           event.setSubject(subject);
           event.setTerm(termChoice.getModelObject());
           event.setDetailInformation(detailInfoField.getModelObject() == null ? "" : detailInfoField.getModelObject());
