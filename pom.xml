@@ -29,8 +29,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <properties>
-        <spring.version>5.3.13</spring.version>
-        <spring-security.version>5.6.0</spring-security.version>
+        <spring.version>5.3.34</spring.version>
+        <spring-security.version>5.6.10</spring-security.version>
         <wicket.version>1.4.7</wicket.version>
         <jetty.version>10.0.16</jetty.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
