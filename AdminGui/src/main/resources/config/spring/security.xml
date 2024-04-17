@@ -40,7 +40,7 @@
                                              or hasRole('ROLE_SECRETARY')
                                              or hasRole('ROLE_TEACHER')"/>
         <headers>
-            <hsts max-age-seconds="60"/>
+            <hsts/>
             <content-security-policy
                     policy-directives="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; font-src 'self'; frame-ancestors 'self'"/>
         </headers>

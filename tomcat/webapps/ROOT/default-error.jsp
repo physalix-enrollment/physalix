@@ -1,4 +1,5 @@
 <%
+    response.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomain");
     response.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; font-src 'self'; frame-ancestors 'self'");
 %>
 <!DOCTYPE html>
