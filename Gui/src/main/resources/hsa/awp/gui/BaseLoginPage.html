@@ -43,12 +43,14 @@
     </div>
 
     <div class="container">
-
-        <div class="name"><label for="userName">Benutzername</label> <input
-                name="username" type="text"/></div>
-
-        <div class="password"><label for="password">Passwort</label> <input
-                name="password" type="password"/></div>
+        <div class="name">
+            <label for="userName">Benutzername</label>
+            <input id="userName" name="username" type="text"/>
+        </div>
+        <div class="password">
+            <label for="password">Passwort</label>
+            <input id="password" name="password" type="password" autocomplete="off" />
+        </div>
         <span wicket:id="feedback"/>
 
         <div><input type="submit" value=" Einloggen "/></div>
